@@ -3,12 +3,12 @@
   <entry>
     <title><![CDATA[ds3h]]></title>
     <url>%2F2019%2F04%2F09%2Fds3h%2F</url>
-    <content type="text"><![CDATA[2019-04-09 笔记P16 What does a ds do? share hardwares, software and data let computers coordinate and synchronize offer users an integrated computing facility not limited by location P17 What is the essetial part? auto scaling &amp; load balance 城市规划例子,when a computer is broken, it will be slower for the system implementation because of the boundary computation which counts on the coordinations one and another computers, so as for synchronization the system have to wait for the slowest computer, with heavier load than others, to process. P18 (b) filters the redundant info and ensure the useful info procured to minimum. (b) will have a higher speed of response. P26 What is Mobility Transparency? eg. Stream serialize deserialize]]></content>
+    <content type="text"><![CDATA[2019-04-09 笔记 P16 What does a ds do? share hardwares, software and data let computers coordinate and synchronize offer users an integrated computing facility not limited by location P17 What is the essetial part? auto scaling &amp; load balance 城市规划例子,when a computer is broken, it will be slower for the system implementation because of the boundary computation which counts on the coordinations one and another computers, so as for synchronization the system have to wait for the slowest computer, with heavier load than others, to process. P18 (b) filters the redundant info and ensure the useful info procured to minimum. (b) will have a higher speed of response. P26 What is Mobility Transparency? eg. Stream serialize deserialize]]></content>
   </entry>
   <entry>
     <title><![CDATA[eigen-everthing]]></title>
     <url>%2F2019%2F04%2F08%2Feigen-everthing%2F</url>
-    <content type="text"><![CDATA[eigenvalue/eigenspace null space nontrival]]></content>
+    <content type="text"><![CDATA[brief introduction of eigenvalue and eigenvector in linear algebra determinant 行列式 eigenvalue特征值/eigenvector特征向量/eigenspace特征空间(all of the eigenvectors that correspond the eigrnvalue) null space nontrival]]></content>
   </entry>
   <entry>
     <title><![CDATA[ds2]]></title>
