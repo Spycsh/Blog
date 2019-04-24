@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[GRE词组]]></title>
+    <url>%2F2019%2F04%2F24%2FGRE%E8%AF%8D%E7%BB%84%2F</url>
+    <content type="text"><![CDATA[GRE 常用词组 Day 1 stop short of jockey for per se silver lining Historian George Coulton attributed a silver lining to the Black Death: prosperity engendered by diminished competition for food, shelter, and work led survivors of the epidemic into the Renaissance and subsequent rise of modern Europe. in the grip of Our “frailities”-emotions and motives such as rage, fear, greed, gluttony, joy, lust, love-may be a very mixed assortment, but they share at least one immediate quality: we are, as we say, “in the grip of” them. bear out The effects of the mechanization of women’s work have not borne out the frequently held assumption that new technology is inherently revolutionary. status quo hinge on According to this model, specialist foundings hinge on the interplay between legitimation and competitive forces, both of which are functions of the density(total number) of firms in a particular specialist population. be pitted against be punctuated by The semi-final was punctuated by a series of malicious fouls. run for run against depart from set apart prior to have a bearing on More generally, however, whether or not a composition establishes a new principle in the history of music has little bearing on its aesthetic worth. take sides stem from in the light of In light of this economic depression, a mass layoff is about to happen. compensate for To compensate for the substantial decline in the availability of fossil fuels in future years, we will have to provide at least an equivalent alternative energy source.]]></content>
+      <tags>
+        <tag>GRE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[补天]]></title>
+    <url>%2F2019%2F04%2F22%2F%E8%A1%A5%E5%A4%A9%2F</url>
+    <content type="text"><![CDATA[JAVA 入门到放弃 Access modifiers(specifiers) in javaprotected 基类的 protected 成员是包内可见的，并且对子类可见； 若子类与基类不在同一包中，那么在子类中，子类实例可以访问其从基类继承而来的protected方法，而不能访问基类实例的protected方法。 detail Containers]]></content>
+  </entry>
+  <entry>
     <title><![CDATA[DSP]]></title>
     <url>%2F2019%2F04%2F13%2FDSP%2F</url>
     <content type="text"><![CDATA[digital signal processing]]></content>
@@ -33,14 +46,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Containers]]></title>
-    <url>%2F2019%2F04%2F11%2FContainers%2F</url>
-    <content type="text"><![CDATA[]]></content>
-      <tags>
-        <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[ds3h]]></title>
     <url>%2F2019%2F04%2F09%2Fds3h%2F</url>
     <content type="text"><![CDATA[2019-04-09 笔记 P16 What does a ds do? share hardwares, software and data let computers coordinate and synchronize offer users an integrated computing facility not limited by location P17 What is the essetial part? auto scaling &amp; load balance 城市规划例子,when a computer is broken, it will be slower for the system implementation because of the boundary computation which counts on the coordinations one and another computers, so as for synchronization the system have to wait for the slowest computer, with heavier load than others, to process. P18 (b) filters the redundant info and ensure the useful info procured to minimum. (b) will have a higher speed of response. P26 What is Mobility Transparency? eg. Stream serialize deserialize]]></content>
@@ -60,6 +65,9 @@
     <title><![CDATA[ds2]]></title>
     <url>%2F2019%2F04%2F05%2Fds2%2F</url>
     <content type="text"><![CDATA[2019-04-05 笔记 make every attribute private and Use getter and setter to access them Communication of DS synchronous: The sender may block activity until acknowledgement from receiver big-endian大端法 small-endian小端法 ASCII, Unicode external data representation and marshalling alternative method Streamsnote transforming in bytes and characters encoded in unicode, must be 2 bytes not 1 class Employee implements Serializable(In China)-&gt; Seralization-&gt;deserialization-&gt;class Employee(In luebeck) 例子说明：建立一个Student类，把它用Stream的方式serialize再deserialize,从而实现信息的传输。 定义Student类1234567891011121314151617import java.io.*;public class Student implements Serializable &#123; private static final long serialVersionUID = 1L; private int studentNumber; private String degreeCourse; Student(int studentNumber, String degreeCourse) &#123; this.studentNumber = studentNumber; this.degreeCourse = degreeCourse; &#125; @Override public String toString() &#123; return "studentNumber:" + studentNumber + " " + "degreeCourse:" + degreeCourse; &#125;&#125; serialize过程12345678910111213141516import java.io.ObjectOutputStream;import java.io.FileOutputStream;import java.io.IOException;public class TestSerializing &#123; public static void main(String[] args) throws IOException &#123; FileOutputStream fos = new FileOutputStream("test"); ObjectOutputStream oos = new ObjectOutputStream(fos); Student chen = new Student(12, "ITB"); oos.writeObject(chen); oos.close(); fos.close(); &#125;&#125; deserialize过程12345678910111213141516171819import java.io.*;public class TestDeserialize &#123; public static void main(String[] args) throws IOException, ClassNotFoundException &#123; FileInputStream fos = new FileInputStream("test"); ObjectInputStream oos = new ObjectInputStream(fos); Student aStudent = null; try &#123; aStudent = (Student) oos.readObject(); &#125; catch (ClassNotFoundException e) &#123; // TODO Auto-generated catch block e.printStackTrace(); &#125; System.out.println(aStudent.toString()); oos.close(); fos.close(); &#125;&#125; 结果test文件中显示乱码，是serialize后的字符流deserialize后通过自己定义的toString打印可以输出原来的信息 疑难 test文件建在项目文件夹而不是src文件夹下 使用ObjectInputStream反序列化的时候，ObjeectInputStream会先读取文件中的serialVersionUID，然后与本地的class文件的serialVersionUID进行对比，如果这两个id不一致，反序列则失败 因此在Student class中定义 1private static final long serialVersionUID = 1L; 即可 参考资料Source]]></content>
+      <tags>
+        <tag>学校</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[Eclipse 高效代码]]></title>
