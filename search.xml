@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[pixivCookbook]]></title>
+    <url>%2F2019%2F04%2F26%2FpixivCookbook%2F</url>
+    <content type="text"></content>
+      <tags>
+        <tag>project</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[ds5]]></title>
+    <url>%2F2019%2F04%2F26%2Fds5%2F</url>
+    <content type="text"><![CDATA[4-26笔记7 fat client microsoft excel thin client automatioc flight check-in machine 18which is on client and which on server 27localhost：在计算机网络中，localhost（意为“本地主机”，指“这台计算机”）是给回路网络接口（loopback）的一个标准主机名，相对应的IP地址为127.0.0.1（IPv4）和[::1]（IPv6）。127.0.0.1是回送地址，指本地机。127.0.0.1是用来检测网络的自己的IP.就是说任何一台电脑来说,不管是否连接到INTERNET上,127.0.0.1对于自己来说都是自己.就是说,每台电脑都是由4位的256进制数组成的.而192.168.1.102现在是本机，但本机也可以设置成其他ip地址，但127.0.0.1一定是指本机。 JAVA client-server 简单例子Socketclient.java12345678910111213141516171819202122232425262728import java.io.BufferedReader;import java.io.IOException;import java.io.InputStreamReader;import java.io.PrintStream;import java.net.Socket;import java.net.UnknownHostException;import java.util.Scanner;public class SocketClient &#123; public static void main(String args[]) throws UnknownHostException, IOException &#123; Scanner sc = new Scanner(System.in); Socket socket = new Socket("127.0.0.1", 54321); // get input stream BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream())); // get output stream PrintStream ps = new PrintStream(socket.getOutputStream()); // write string into server ps.println(sc.nextLine()); // print the reversed string from server System.out.println(br.readLine()); socket.close(); &#125;&#125; SocketServer.java1234567891011121314151617181920212223242526272829303132333435import java.io.BufferedReader;import java.io.IOException;import java.io.InputStreamReader;import java.io.PrintStream;import java.net.ServerSocket;import java.net.Socket;public class SocketServer &#123; public static void main(String[] args) throws IOException &#123; ServerSocket server = new ServerSocket(54321); System.out.println("Server is on, binded to 54321 port"); while (true) &#123; final Socket socket = server.accept(); new Thread() &#123; public void run() &#123; try &#123; // get the input stream BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream())); PrintStream ps = new PrintStream(socket.getOutputStream()); String line = br.readLine(); line = new StringBuilder(line).reverse().toString(); ps.println(line); socket.close(); &#125; catch (IOException e) &#123; e.printStackTrace(); &#125; &#125; &#125;.start(); &#125; &#125;&#125;]]></content>
+      <tags>
+        <tag>学校</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[GRE词组]]></title>
     <url>%2F2019%2F04%2F24%2FGRE%E8%AF%8D%E7%BB%84%2F</url>
     <content type="text"><![CDATA[GRE 常用词组 Day 1 stop short of jockey for per se silver lining Historian George Coulton attributed a silver lining to the Black Death: prosperity engendered by diminished competition for food, shelter, and work led survivors of the epidemic into the Renaissance and subsequent rise of modern Europe. in the grip of Our “frailities”-emotions and motives such as rage, fear, greed, gluttony, joy, lust, love-may be a very mixed assortment, but they share at least one immediate quality: we are, as we say, “in the grip of” them. bear out The effects of the mechanization of women’s work have not borne out the frequently held assumption that new technology is inherently revolutionary. status quo hinge on According to this model, specialist foundings hinge on the interplay between legitimation and competitive forces, both of which are functions of the density(total number) of firms in a particular specialist population. be pitted against be punctuated by The semi-final was punctuated by a series of malicious fouls. run for run against depart from set apart prior to have a bearing on More generally, however, whether or not a composition establishes a new principle in the history of music has little bearing on its aesthetic worth. take sides stem from in the light of In light of this economic depression, a mass layoff is about to happen. compensate for To compensate for the substantial decline in the availability of fossil fuels in future years, we will have to provide at least an equivalent alternative energy source.]]></content>
