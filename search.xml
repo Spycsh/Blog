@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[DSP_RMI]]></title>
     <url>%2F2019%2F05%2F16%2FDSP-RMI%2F</url>
-    <content type="text"><![CDATA[123456789101112131415import java.rmi.Naming;public class HelloClient &#123; public static void main(String args[]) &#123; try &#123; for(int i=0;i&lt;5;i++) &#123; IHello rhello = (IHello) Naming.lookup("rmi://192.168.31.102:8888/test"); System.out.println(rhello.helloWorld()); &#125; &#125;catch(Exception e) &#123; e.printStackTrace(); &#125; &#125;&#125;]]></content>
+    <content type="text"><![CDATA[RMI例子 远程接口 IHello.java 1234567// define remote interfaceimport java.rmi.Remote;import java.rmi.RemoteException;public interface IHello extends Remote &#123; public int helloWorld()throws RemoteException;&#125; 实现类 Hello.java 123456789101112131415161718// define the implementation classimport java.io.Serializable;import java.rmi.RemoteException;import java.rmi.server.UnicastRemoteObject;public class Hello extends UnicastRemoteObject implements IHello&#123; private static final long serialVersionUID = 1L; private int index = 0; protected Hello() throws RemoteException&#123; &#125; @Override public int helloWorld() &#123; System.out.println("Hello!"); return ++index; &#125;&#125; 客户端 HelloClient.java 123456789101112131415import java.rmi.Naming;public class HelloClient &#123; public static void main(String args[]) &#123; try &#123; for(int i=0;i&lt;5;i++) &#123; IHello rhello = (IHello) Naming.lookup("rmi://192.168.31.102:8888/test"); System.out.println(rhello.helloWorld()); &#125; &#125;catch(Exception e) &#123; e.printStackTrace(); &#125; &#125;&#125;]]></content>
   </entry>
   <entry>
     <title><![CDATA[Equicalence Partitioning Class]]></title>
