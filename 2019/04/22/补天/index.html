@@ -127,24 +127,24 @@
 <meta name="keywords" content="TEST">
 <meta property="og:type" content="article">
 <meta property="og:title" content="补天">
-<meta property="og:url" content="https://spycsh.github.io/2019/04/22/补天/index.html">
+<meta property="og:url" content="https://spycsh.github.io/blog/2019/04/22/补天/index.html">
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="JAVA 入门到放弃">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://spycsh.github.io/blog//spycsh.github.io/blog/2019/04/22/补天/collections.png">
-<meta property="og:image" content="https://spycsh.github.io/blog//spycsh.github.io/blog/2019/04/22/补天/synchronize.png">
+<meta property="og:image" content="https://spycsh.github.io/blog/2019/04/22/补天/collections.png">
+<meta property="og:image" content="https://spycsh.github.io/blog/2019/04/22/补天/synchronize.png">
 <meta property="og:updated_time" content="2019-05-17T20:38:08.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="补天">
 <meta name="twitter:description" content="JAVA 入门到放弃">
-<meta name="twitter:image" content="https://spycsh.github.io/blog//spycsh.github.io/blog/2019/04/22/补天/collections.png">
+<meta name="twitter:image" content="https://spycsh.github.io/blog/2019/04/22/补天/collections.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://spycsh.github.io/2019/04/22/补天/">
+  <link rel="canonical" href="https://spycsh.github.io/blog/2019/04/22/补天/">
 
 
 
@@ -368,7 +368,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/2019/04/22/补天/">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/2019/04/22/补天/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Csh">
@@ -519,9 +519,9 @@
 <p>当某个类的整体定义为final时，表明该类不能被继承，方法不能被覆盖，且final类中的所有方法都隐式指定为是final的，方法声明为final后还可以有效地“关闭”动态绑定。</p>
 </blockquote>
 <hr>
-<h3 id="Containers"><a href="#Containers" class="headerlink" title="Containers"></a>Containers</h3><p><img src="/blog//spycsh.github.io/blog/2019/04/22/补天/collections.png" alt="0"></p>
+<h3 id="Containers"><a href="#Containers" class="headerlink" title="Containers"></a>Containers</h3><p><img src="/blog/2019/04/22/补天/collections.png" alt="0"></p>
 <hr>
-<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p><img src="/blog//spycsh.github.io/blog/2019/04/22/补天/synchronize.png" alt="1"></p>
+<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p><img src="/blog/2019/04/22/补天/synchronize.png" alt="1"></p>
 <h3 id="修饰代码块，其他试图访问该对象的线程阻塞"><a href="#修饰代码块，其他试图访问该对象的线程阻塞" class="headerlink" title="修饰代码块，其他试图访问该对象的线程阻塞"></a>修饰代码块，其他试图访问该对象的线程阻塞</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">	<span class="comment">// 同步代码块</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="对象作为锁"><a href="#对象作为锁" class="headerlink" title="对象作为锁"></a>对象作为锁</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (account) &#123;</span><br><span class="line">	<span class="comment">// 同步代码块</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="没有明确的对象作为锁"><a href="#没有明确的对象作为锁" class="headerlink" title="没有明确的对象作为锁"></a>没有明确的对象作为锁</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">byte</span>[] lock = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];  <span class="comment">// 特殊的instance变量</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">      <span class="keyword">synchronized</span>(lock) &#123;</span><br><span class="line">         <span class="comment">// todo 同步代码块</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -565,7 +565,7 @@
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
     
-    <a href="https://spycsh.github.io/2019/04/22/补天/" title="补天">https://spycsh.github.io/2019/04/22/补天/</a>
+    <a href="https://spycsh.github.io/blog/2019/04/22/补天/" title="补天">https://spycsh.github.io/blog/2019/04/22/补天/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
