@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/blog/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="JAVA 入门到放弃">
+<meta name="keywords" content="TEST">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java基础">
+<meta property="og:url" content="https://spycsh.github.io/blog/2019/04/22/java基础/index.html">
+<meta property="og:site_name" content="Spycsh">
+<meta property="og:description" content="JAVA 入门到放弃">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://github.com/Spycsh/blog/blob/master/images/%E8%A1%A5%E5%A4%A9/collections.png?raw=true">
+<meta property="og:image" content="https://github.com/Spycsh/blog/blob/master/images/%E8%A1%A5%E5%A4%A9/synchronize.png?raw=true">
+<meta property="og:updated_time" content="2020-07-21T20:38:14.673Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java基础">
+<meta name="twitter:description" content="JAVA 入门到放弃">
+<meta name="twitter:image" content="https://github.com/Spycsh/blog/blob/master/images/%E8%A1%A5%E5%A4%A9/collections.png?raw=true">
+
+
+
+
+
+
+  <link rel="canonical" href="https://spycsh.github.io/blog/2019/04/22/java基础/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>java基础 | Spycsh</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spycsh</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">无计花间住</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/blog/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-少年的诗">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/blog/2018/12/13/少年的诗/" rel="section"><i class="menu-item-icon fa fa-fw fa-binoculars"></i> <br>少年的诗</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-留学申请">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/blog/2019/03/19/Master/" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>留学申请</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2019/04/22/java基础/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Csh">
+      <meta itemprop="description" content="TEST">
+      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spycsh">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java基础
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-22 22:50:51" itemprop="dateCreated datePublished" datetime="2019-04-22T22:50:51+02:00">2019-04-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-21 22:38:14" itemprop="dateModified" datetime="2020-07-21T22:38:14+02:00">2020-07-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="JAVA-入门到放弃"><a href="#JAVA-入门到放弃" class="headerlink" title="JAVA 入门到放弃"></a>JAVA 入门到放弃</h1><a id="more"></a>
+<h2 id="Access-modifiers-specifiers-in-java"><a href="#Access-modifiers-specifiers-in-java" class="headerlink" title="Access modifiers(specifiers) in java"></a>Access modifiers(specifiers) in java</h2><hr>
+<h3 id="protected"><a href="#protected" class="headerlink" title="protected"></a>protected</h3><ul>
+<li>基类的 protected 成员是包内可见的，并且对子类可见；</li>
+<li>若子类与基类不在同一包中，那么在子类中，子类实例可以访问其从基类继承而来的protected方法，而不能访问基类实例的protected方法。</li>
+</ul>
+<p><a href="https://blog.csdn.net/justloveyou_/article/details/61672133" target="_blank" rel="noopener">detail</a></p>
+<hr>
+<h3 id="overload"><a href="#overload" class="headerlink" title="overload"></a>overload</h3><p>each overloaded method must take a unique list of the argument types</p>
+<hr>
+<h3 id="override"><a href="#override" class="headerlink" title="override"></a>override</h3><p>（1）重写方法必须和被重写方法具有相同的参数列表（包括顺序及个数还有类型），返回类型必须和被重写方法的返回类型相同或者是返回类型的子类型。</p>
+<p>（2）重写方法的访问控制修饰符不能比被重写方法更严格（比如一个在父类中声明为public的方法重写成一个protected的方法）。</p>
+<p>（3）只有实例方法才能被重写，超类中的static和final方法不能被重写。</p>
+<p>（4）重写方法不能抛出新的检查异常，或者是抛出比被重写方法声明的检查异常更广泛的检查异常。</p>
+<p>（5）注意一种特殊情况：如果超类的方法版本中声明了检查异常，但重写的子类方法中没有声明，这时如果使用多态的方式进行调用，那么编译器认为你调用的是声明了异常的方法。</p>
+<p>（6）尽管多态是在编译时确定对象的类型，但在编译时，还是根据父类的方法声明进行程序检查。因此，如果子类中定义的方法，在父类中没有定义，则会出项编译错误。</p>
+<hr>
+<h3 id="upcast"><a href="#upcast" class="headerlink" title="upcast"></a>upcast</h3><p>the act of converting a subclass reference into a baseclass reference</p>
+<p>缺点：使用向上转型时不能调用子类特有的方法了</p>
+<p>优点：一个父类有多个子类时，一个子类重写了许多父类的方法，可以声明一个public static函数统一对<br>每个属于父类的子类进行操作，节省代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Spycsh</span></span><br><span class="line"><span class="comment"> * 2019-04-28</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String carDescription = <span class="string">"Car"</span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"父类run方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">speed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"父类speed方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> carDescription;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Benz</span> <span class="keyword">extends</span> <span class="title">Car</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Benz:run方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">speed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Benz:speed方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BMW</span> <span class="keyword">extends</span> <span class="title">Car</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"BMW:run方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">speed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"BMW:speed方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Porsche</span> <span class="keyword">extends</span> <span class="title">Car</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String carDescription = <span class="string">"Porsche is the best!"</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Porche:run方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">speed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Porche:speed方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">price</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Porche:price方法"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> carDescription;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UpcastEX</span> <span class="keyword">extends</span> <span class="title">Car</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> car</span></span><br><span class="line"><span class="comment">	 * 	 !upcast</span></span><br><span class="line"><span class="comment">	 * 	 without upcast you need to define show method for each car brand</span></span><br><span class="line"><span class="comment">	 * 	 save code amount</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Car car)</span> </span>&#123;</span><br><span class="line">		car.run();</span><br><span class="line">		car.speed();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">showAll</span><span class="params">(Car[] e)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span>(Car i:e) &#123;</span><br><span class="line">			show(i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Car[] carFleet = &#123;</span><br><span class="line">				<span class="keyword">new</span> Benz(),</span><br><span class="line">				<span class="keyword">new</span> BMW(),</span><br><span class="line">				<span class="keyword">new</span> Porsche()</span><br><span class="line">		&#125;;</span><br><span class="line">		</span><br><span class="line">		showAll(carFleet);</span><br><span class="line">		</span><br><span class="line">		Car porsche911 = <span class="keyword">new</span> Porsche();</span><br><span class="line">		<span class="comment">//porsche911.price();  // ERROR</span></span><br><span class="line">		<span class="comment">// !cannot be implemented because of upcasting!</span></span><br><span class="line">		<span class="comment">// baseclass don`t define price()!</span></span><br><span class="line">        </span><br><span class="line">                System.out.println(<span class="string">"test getDescription:"</span>);</span><br><span class="line">		<span class="comment">// show that although upcasting, field are accessed</span></span><br><span class="line">		<span class="comment">// in subclass, not baseclass.</span></span><br><span class="line">		System.out.println(porsche911.getDescription());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>OUTPUT</p>
+</blockquote>
+<p>Benz:run方法</p>
+<p>Benz:speed方法</p>
+<p>BMW:run方法</p>
+<p>BMW:speed方法</p>
+<p>Porche:run方法</p>
+<p>Porche:speed方法</p>
+<p>test getDescription:</p>
+<p>Porsche is the best!</p>
+<hr>
+<h3 id="static"><a href="#static" class="headerlink" title="static"></a>static</h3><p>static修饰方法 静态方法 属于类的方法 即访问它不需要实例对象就能访问</p>
+<hr>
+<h3 id="final"><a href="#final" class="headerlink" title="final"></a>final</h3><h4 id="static-final修饰data"><a href="#static-final修饰data" class="headerlink" title="static, final修饰data"></a>static, final修饰data</h4><blockquote>
+<p>static 强调只有一份，final 说明是一个常量，final定义的基本类型(primitive)的值是不可改变的，但是fianl定义的引用对象的值是可以改变的</p>
+</blockquote>
+<p>只申明final，每次new产生不同的对象<br>static, final一起使用时，只有一块存储地址<br>申明static final，每次new产生相同对象</p>
+<h4 id="final修饰methods"><a href="#final修饰methods" class="headerlink" title="final修饰methods"></a>final修饰methods</h4><blockquote>
+<p>把方法锁定，确保在继承中使用方法行为不变，并且不会被覆盖<br>其二是效率，如果一个方法指明为final，就是同意编译器将针对该方法的所有调用都转为内嵌调用。 转为内嵌调用的目的是节省开销，因为编译器发现一个final方法调用命令时，会跳过程序代码这种正常方式而执行方法调用机制（将参数压入栈，跳至方法代码处并执行，然后跳回并清理栈中的参数，处理返回值），并且以方法体中的实际代码的副本来替代方法调用。但是如果一个方法很大，程序很膨胀，就会看不到内嵌带来的任何性能的提高。</p>
+</blockquote>
+<h4 id="final修饰类"><a href="#final修饰类" class="headerlink" title="final修饰类"></a>final修饰类</h4><blockquote>
+<p>当某个类的整体定义为final时，表明该类不能被继承，方法不能被覆盖，且final类中的所有方法都隐式指定为是final的，方法声明为final后还可以有效地“关闭”动态绑定。</p>
+</blockquote>
+<hr>
+<h3 id="Containers"><a href="#Containers" class="headerlink" title="Containers"></a>Containers</h3><!-- ![0](补天/collections.png) -->
+<p><img src="https://github.com/Spycsh/blog/blob/master/images/%E8%A1%A5%E5%A4%A9/collections.png?raw=true"></p>
+<hr>
+<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><!-- ![1](补天/synchronize.png) -->
+<p><img src="https://github.com/Spycsh/blog/blob/master/images/%E8%A1%A5%E5%A4%A9/synchronize.png?raw=true"></p>
+<h3 id="修饰代码块，其他试图访问该对象的线程阻塞"><a href="#修饰代码块，其他试图访问该对象的线程阻塞" class="headerlink" title="修饰代码块，其他试图访问该对象的线程阻塞"></a>修饰代码块，其他试图访问该对象的线程阻塞</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">	<span class="comment">// 同步代码块</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="对象作为锁"><a href="#对象作为锁" class="headerlink" title="对象作为锁"></a>对象作为锁</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (account) &#123;</span><br><span class="line">	<span class="comment">// 同步代码块</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="没有明确的对象作为锁"><a href="#没有明确的对象作为锁" class="headerlink" title="没有明确的对象作为锁"></a>没有明确的对象作为锁</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">byte</span>[] lock = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];  <span class="comment">// 特殊的instance变量</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">      <span class="keyword">synchronized</span>(lock) &#123;</span><br><span class="line">         <span class="comment">// todo 同步代码块</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://blog.csdn.net/luoweifu/article/details/46613015" target="_blank" rel="noopener">参考资料</a></p>
+<p><a href="https://www.cnblogs.com/moongeek/p/7631447.html" target="_blank" rel="noopener">消费者-生产者例子</a></p>
+<hr>
+<h2 id="lambda"><a href="#lambda" class="headerlink" title="lambda"></a>lambda</h2><h3 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用匿名内部类  </span></span><br><span class="line">btn.setOnAction(<span class="keyword">new</span> EventHandler&lt;ActionEvent&gt;() &#123;  </span><br><span class="line">          <span class="meta">@Override</span>  </span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(ActionEvent event)</span> </span>&#123;  </span><br><span class="line">              System.out.println(<span class="string">"Hello World!"</span>);   </span><br><span class="line">          &#125;  </span><br><span class="line">    &#125;);  </span><br><span class="line">   </span><br><span class="line"><span class="comment">// 或者使用 lambda expression  </span></span><br><span class="line">btn.setOnAction(event -&gt; System.out.println(<span class="string">"Hello World!"</span>));</span><br></pre></td></tr></table></figure>
+<h3 id="排序，线程，集合用法"><a href="#排序，线程，集合用法" class="headerlink" title="排序，线程，集合用法"></a>排序，线程，集合用法</h3><p><a href="https://www.cnblogs.com/franson-2016/p/5593080.html" target="_blank" rel="noopener">参考资料</a></p>
+<hr>
+<h3 id="LinkedList-和-ArrayList-区别"><a href="#LinkedList-和-ArrayList-区别" class="headerlink" title="LinkedList 和 ArrayList 区别"></a>LinkedList 和 ArrayList 区别</h3><p>LinkedList插入元素（任意位置只要断开链接再与新元素链接即可）很快，但访问中间元素需要从头或从尾开始遍历，很慢。<br>ArrayList插入元素很慢，它需要更新一遍数组，但访问元素只需要给出索引，相对较快。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+      <div>
+        
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Csh</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://spycsh.github.io/blog/2019/04/22/java基础/" title="java基础">https://spycsh.github.io/blog/2019/04/22/java基础/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/04/12/ds4/" rel="next" title="ds4">
+                <i class="fa fa-chevron-left"></i> ds4
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/04/26/ds5/" rel="prev" title="ds5">
+                ds5 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/blog/images/Haruhi.jpg" alt="Csh">
+            
+              <p class="site-author-name" itemprop="name">Csh</p>
+              <p class="site-description motion-element" itemprop="description">TEST</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/blog/archives">
+                
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/blog/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">0</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/blog/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/Spycsh" title="GitHub &rarr; https://github.com/Spycsh" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://757407490@qq.com" title="QQ &rarr; https://757407490@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/blog/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JAVA-入门到放弃"><span class="nav-number">1.</span> <span class="nav-text">JAVA 入门到放弃</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Access-modifiers-specifiers-in-java"><span class="nav-number">1.1.</span> <span class="nav-text">Access modifiers(specifiers) in java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#protected"><span class="nav-number">1.1.1.</span> <span class="nav-text">protected</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#overload"><span class="nav-number">1.1.2.</span> <span class="nav-text">overload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#override"><span class="nav-number">1.1.3.</span> <span class="nav-text">override</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#upcast"><span class="nav-number">1.1.4.</span> <span class="nav-text">upcast</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static"><span class="nav-number">1.1.5.</span> <span class="nav-text">static</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#final"><span class="nav-number">1.1.6.</span> <span class="nav-text">final</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#static-final修饰data"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">static, final修饰data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final修饰methods"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">final修饰methods</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final修饰类"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">final修饰类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Containers"><span class="nav-number">1.1.7.</span> <span class="nav-text">Containers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized"><span class="nav-number">1.1.8.</span> <span class="nav-text">synchronized</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修饰代码块，其他试图访问该对象的线程阻塞"><span class="nav-number">1.1.9.</span> <span class="nav-text">修饰代码块，其他试图访问该对象的线程阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象作为锁"><span class="nav-number">1.1.10.</span> <span class="nav-text">对象作为锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#没有明确的对象作为锁"><span class="nav-number">1.1.11.</span> <span class="nav-text">没有明确的对象作为锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lambda"><span class="nav-number">1.2.</span> <span class="nav-text">lambda</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事件监听"><span class="nav-number">1.2.1.</span> <span class="nav-text">事件监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排序，线程，集合用法"><span class="nav-number">1.2.2.</span> <span class="nav-text">排序，线程，集合用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedList-和-ArrayList-区别"><span class="nav-number">1.2.3.</span> <span class="nav-text">LinkedList 和 ArrayList 区别</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Csh</span>
+
+  
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.6.0</div>
+
+
+
+
+-->
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/blog/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/blog/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/blog/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/blog/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/blog/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>
