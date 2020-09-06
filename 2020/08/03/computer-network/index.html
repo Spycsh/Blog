@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="计算机网络知识点">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/EthernetFrame.jpg">
+<meta property="og:image" content="https://github.com/Spycsh/blog/blob/master/2020/08/03/computer-network/EthernetFrame.jpg">
 <meta property="og:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/arp报文格式.png">
 <meta property="og:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/ip报文格式.png">
 <meta property="og:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/IP分组转发流程.jpg">
@@ -139,11 +139,11 @@
 <meta property="og:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/ICMP报文类型.png">
 <meta property="og:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/tcp-ip-handshark.png">
 <meta property="og:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/滑窗.jpg">
-<meta property="og:updated_time" content="2020-08-15T20:26:05.784Z">
+<meta property="og:updated_time" content="2020-09-06T22:18:21.235Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="computer network">
 <meta name="twitter:description" content="计算机网络知识点">
-<meta name="twitter:image" content="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/EthernetFrame.jpg">
+<meta name="twitter:image" content="https://github.com/Spycsh/blog/blob/master/2020/08/03/computer-network/EthernetFrame.jpg">
 
 
 
@@ -436,7 +436,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-15 22:26:05" itemprop="dateModified" datetime="2020-08-15T22:26:05+02:00">2020-08-15</time>
+                <time title="修改时间：2020-09-07 00:18:21" itemprop="dateModified" datetime="2020-09-07T00:18:21+02:00">2020-09-07</time>
               
             
           </span>
@@ -474,7 +474,7 @@
 <p>二、链路层</p>
 <p>功能：将上层数据封装成帧，用MAC地址访问媒介，错误检测与修正</p>
 <ul>
-<li><p>以太网帧格式<br>7字节前导码（同步）<br>1字节帧开始符<br>6子节MAC目标地址<br>6子节MAC源地址<br>一个4子节标签（可选）<br>2字节以太类型（0x0800 IPv4; 0x0806 ARP)<br>负载46-1500字节<br>CRC冗余校验<br>帧间距12字节<br><img src="/blog/blog/2020/08/03/computer-network/EthernetFrame.jpg" alt="1"></p>
+<li><p>以太网帧格式<br>7字节前导码（同步）<br>1字节帧开始符<br>6子节MAC目标地址<br>6子节MAC源地址<br>一个4子节标签（可选）<br>2字节以太类型（0x0800 IPv4; 0x0806 ARP)<br>负载46-1500字节<br>CRC冗余校验<br>帧间距12字节<br><img src="https://github.com/Spycsh/blog/blob/master/2020/08/03/computer-network/EthernetFrame.jpg" alt="1"></p>
 </li>
 <li><p>MTU（Maximum transmission Unit) 数据链路层最大数据包大小，单位：字节。即无需进一步分片就能穿过这条“路径”的最大传输单元的最大值。如果不要分片，设置数据报的DF位（Don’t fragment），路径上任何需要将分组进行分片的设备都会将这种数据报丢弃并返回一个“数据报过大”的ICMP响应到源地址。</p>
 </li>
