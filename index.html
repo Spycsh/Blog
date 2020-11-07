@@ -412,7 +412,7 @@
                 
               
 
-              <time title="创建时间：2020-11-07 20:42:59 / 修改时间：21:39:10" itemprop="dateCreated datePublished" datetime="2020-11-07T20:42:59+01:00">2020-11-07</time>
+              <time title="创建时间：2020-11-07 20:42:59 / 修改时间：21:55:09" itemprop="dateCreated datePublished" datetime="2020-11-07T20:42:59+01:00">2020-11-07</time>
             
 
             
@@ -454,7 +454,7 @@
           
             <p>AUC的计算较为复杂,这里不再牵扯概念介绍,直接给出代码。一般涉及到的是binary classification的AUC计算,这里给出的计算方法即可用于binary也可用于多分类问题。</p>
 <p>input: 给定的dataframe, 实际预测的correctlabels<br>output: AUC 面积</p>
-<p>举个例子，给定的dataframe是<br>|    |  A |    B |    C|<br>|—|—|—|—|<br>|0 | 0.50 | 0.50 | 0.00|<br>|1 | 0.50 | 0.25  |0.25|<br>|2 | 0.50 | 0.25  |0.25|<br>|3 | 0.25 | 0.50 | 0.25|<br>|4 | 0.25 | 0.25 | 0.50|</p>
+<p>举个例子，给定的dataframe是<br>|    |  A |    B |    C|<br>|:—:|:—:|—:|:—:|<br>|0 | 0.50 | 0.50 | 0.00|<br>|1 | 0.50 | 0.25  |0.25|<br>|2 | 0.50 | 0.25  |0.25|<br>|3 | 0.25 | 0.50 | 0.25|<br>|4 | 0.25 | 0.25 | 0.50|</p>
 <p>其中的数字代表着预测该类的概率  </p>
 <p>而corrrectlabels也即实际预测的结果是[“B”,”A”,”B”,”B”,”C”]<br>这两者作为input可以计算output的AUC面积</p>
 <p>以下是代码：</p>
