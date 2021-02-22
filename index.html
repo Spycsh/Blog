@@ -365,6 +365,340 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/02/22/dirty-read-phantom-read-and-unrepeatable-read/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Csh">
+      <meta itemprop="description" content="TEST">
+      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spycsh">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/blog/2021/02/22/dirty-read-phantom-read-and-unrepeatable-read/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">dirty read, phantom read, and unrepeatable read</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-02-22 08:45:50 / 修改时间：09:25:56" itemprop="dateCreated datePublished" datetime="2021-02-22T08:45:50+01:00">2021-02-22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>脏读dirty read：读取未提交的数据。B发起事务，B写后，A读（读取未提交的数据），但B之后回滚了，再提交，A再读，不一致。</p>
+<p>不可重复读unrepeatable read：前后多次读取不一致。A读，B写，B提交，A再读，不一致。<strong>针对update操作</strong>。</p>
+<p>幻读phantom read：前后多次读取，数据总量不一致。A读数据库行数，B插入或删除某一行，A再读行数，不一致。 <strong>针对insert和delete操作</strong></p>
+<p><strong>解决方案</strong>：</p>
+<p>根据数据库事务四大性质中的隔离性：隔离性级别被分为read_uncommit，read_commit，read_repeatable，Serializable用以解决以上的问题。它们的区别是：read_uncommit没有解决任何问题，read_commit解决了脏读，read_repeatable解决了脏读和不可重复读，Serializable解决了三种情况。</p>
+<p>read_commit：在上文的情况下，B写的整个事务周期，A都不能读。只有B发起事务前和提交事务后A才能读，这样就不会出现B写时A读从而读取不一致的情况。（Sql Server , Oracle使用的就是read_commit级别）</p>
+<p>read_repeatable: 保证了不出现脏读，并且保证不可重复读。A读时，就对行加锁，B不能写这条数据。直到A多次读完后，B才能写。（MySQL使用的就是read_repeatable级别）<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* （参数可以为：Read uncommitted，Read committed， Repeatable，Serializable） */</span></span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">session</span> <span class="keyword">TRANSACTION</span> <span class="keyword">ISOLATION</span> <span class="keyword">LEVEL</span> Repeatable;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">`id`</span> <span class="keyword">FROM</span> <span class="string">`users`</span> <span class="keyword">WHERE</span> <span class="string">`id`</span> = <span class="number">1</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure></p>
+<p>serializable：保证了不出现脏读、不可重复读和幻读。A读时，对表加锁，B不能添加或删除其它数据行。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">session</span> <span class="keyword">TRANSACTION</span> <span class="keyword">ISOLATION</span> <span class="keyword">LEVEL</span> <span class="keyword">Serializable</span>;</span><br></pre></td></tr></table></figure></p>
+<p>参考</p>
+<p><a href="">https://cloud.tencent.com/developer/article/1450773</a></p>
+<p><a href="">https://segmentfault.com/a/1190000016566788</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/01/28/Disributed-Framework-and-Dubbo/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Csh">
+      <meta itemprop="description" content="TEST">
+      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spycsh">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/blog/2021/01/28/Disributed-Framework-and-Dubbo/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">Disributed Framework and Dubbo</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-01-28 20:20:47 / 修改时间：23:40:31" itemprop="dateCreated datePublished" datetime="2021-01-28T20:20:47+01:00">2021-01-28</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Distributed-Framework-and-Dubbo"><a href="#Distributed-Framework-and-Dubbo" class="headerlink" title="Distributed Framework and Dubbo"></a>Distributed Framework and Dubbo</h1><h2 id="What-is-Distributed-System"><a href="#What-is-Distributed-System" class="headerlink" title="What is Distributed System?"></a>What is Distributed System?</h2><p>a collection of independent comptuters which serve like a coherent system to users.</p>
+<h2 id="Framework-transition-and-why-we-need-Distributed-Framework"><a href="#Framework-transition-and-why-we-need-Distributed-Framework" class="headerlink" title="Framework transition and why we need Distributed Framework?"></a>Framework transition and why we need Distributed Framework?</h2><h3 id="All-in-One-Architecture"><a href="#All-in-One-Architecture" class="headerlink" title="All in One Architecture"></a>All in One Architecture</h3><p>Initially, we have one simple application, on which all the functionalities are integrated, when we have only a few users. At that time, ORM is necessary because it simplify the CRUD processes.</p>
+<p>When there are more and more users, we surely need more servers to bear more pressure (One application Multiple servers). Therefore we need more servers ro bear the pressure together (use Ngnix to balance overload). However that will cause two problems:</p>
+<ul>
+<li><p>Difficult to extend<br>When we modify one func of one server, we need to package the whole application again to other servers.</p>
+</li>
+<li><p>Difficult to collaborate</p>
+</li>
+</ul>
+<h3 id="Vertical-Architecture"><a href="#Vertical-Architecture" class="headerlink" title="Vertical Architecture"></a>Vertical Architecture</h3><p>different modules of applications (e.g. User/Shopping Cart/Payment), assign different number of servers to modules based on demands. We will meet the problems and we should also:  </p>
+<ul>
+<li><p>View/ Logics should be divided </p>
+</li>
+<li><p>Applications cannot be fully seperated, some should interact</p>
+</li>
+</ul>
+<h3 id="RPC-Architecture"><a href="#RPC-Architecture" class="headerlink" title="RPC Architecture"></a>RPC Architecture</h3><p>But there yield another problem, how to interact between Web view and Services logics as they are divided?</p>
+<p>Answer: Use RPC (Remote Process Call).</p>
+<p>Therefore, we need a distributed service framework to handle the RPC. And we also need a <strong>scheduler</strong> to balance the load.</p>
+<h2 id="RPC-problems"><a href="#RPC-problems" class="headerlink" title="RPC problems"></a>RPC problems</h2><p>RPC is a method that used by one service on one server A to call the procedure on another server B.</p>
+<p>Both server A and B should have its own stub (helper) to handle the sending messages(functions/parameters)and returning messages(results). The RPC is an aynchronous process. To send or receive the messages the stub should firstly serialize or deserialize the objects.</p>
+<p>The core problems in an RPC framework:</p>
+<ul>
+<li>how efficient to establish connection</li>
+<li>how efficient to serialize/deserialize</li>
+</ul>
+<h2 id="RPC-framework-Dubbo"><a href="#RPC-framework-Dubbo" class="headerlink" title="RPC framework - Dubbo"></a>RPC framework - Dubbo</h2><p><a href="https://dubbo.apache.org/en/" target="_blank" rel="noopener">https://dubbo.apache.org/en/</a></p>
+<p><img src="https://raw.githubusercontent.com/apache/dubbo-website/master/static/imgs/architecture.png" alt="arch"></p>
+<p>Dubbo is a framework with following features:</p>
+<ul>
+<li>Interface-based High-performance RPC</li>
+<li>Intelligent load balance</li>
+<li>Automatic service registration and discovery (“recommend”)</li>
+<li>High extensibility (micro-kernal and plugin design)</li>
+<li>Runtime traffic routing (blue-green deployment, some requests use new services, some use old services)</li>
+<li>Visualization</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/01/24/Byzantine-Leader-Election/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -903,7 +1237,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-01-24 01:02:36" itemprop="dateModified" datetime="2021-01-24T01:02:36+01:00">2021-01-24</time>
+                <time title="修改时间：2021-01-29 13:19:02" itemprop="dateModified" datetime="2021-01-29T13:19:02+01:00">2021-01-29</time>
               
             
           </span>
@@ -1614,330 +1948,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2019/05/18/java网络编程/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Csh">
-      <meta itemprop="description" content="TEST">
-      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spycsh">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/blog/2019/05/18/java网络编程/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">java网络编程</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          
-
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-18 18:58:55" itemprop="dateCreated datePublished" datetime="2019-05-18T18:58:55+02:00">2019-05-18</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-21 22:50:46" itemprop="dateModified" datetime="2020-07-21T22:50:46+02:00">2020-07-21</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="java网络编程"><a href="#java网络编程" class="headerlink" title="java网络编程"></a>java网络编程</h1>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/blog/2019/05/18/java网络编程/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2019/05/17/SWEII-TEST/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Csh">
-      <meta itemprop="description" content="TEST">
-      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spycsh">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/blog/2019/05/17/SWEII-TEST/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">SWEII_TEST</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          
-
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-17 22:20:55" itemprop="dateCreated datePublished" datetime="2019-05-17T22:20:55+02:00">2019-05-17</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-19 11:40:36" itemprop="dateModified" datetime="2019-05-19T11:40:36+02:00">2019-05-19</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="4-types-of-coverage-in-testing"><a href="#4-types-of-coverage-in-testing" class="headerlink" title="4 types of coverage in testing"></a>4 types of coverage in testing</h3>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/blog/2019/05/17/SWEII-TEST/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1987,7 +1997,7 @@
                 
                   <a href="/blog/archives">
                 
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
