@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/blog/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Distributed Systems revision">
+<meta name="keywords" content="Distributed System">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Distributed Systems revision">
+<meta property="og:url" content="https://spycsh.github.io/blog/2021/03/18/Distributed-Systems-revision/index.html">
+<meta property="og:site_name" content="Spycsh">
+<meta property="og:description" content="Distributed Systems revision">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-03-18T20:53:26.896Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Distributed Systems revision">
+<meta name="twitter:description" content="Distributed Systems revision">
+
+
+
+
+
+
+  <link rel="canonical" href="https://spycsh.github.io/blog/2021/03/18/Distributed-Systems-revision/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Distributed Systems revision | Spycsh</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spycsh</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">无计花间住</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/blog/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-少年的诗">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/blog/2018/12/13/少年的诗/" rel="section"><i class="menu-item-icon fa fa-fw fa-binoculars"></i> <br>少年的诗</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-留学申请">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/blog/2019/03/19/Master/" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>留学申请</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/03/18/Distributed-Systems-revision/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Csh">
+      <meta itemprop="description" content="TEST">
+      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spycsh">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Distributed Systems revision
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-03-18 21:42:23 / 修改时间：21:53:26" itemprop="dateCreated datePublished" datetime="2021-03-18T21:42:23+01:00">2021-03-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Distributed-Systems-revision"><a href="#Distributed-Systems-revision" class="headerlink" title="Distributed Systems revision"></a>Distributed Systems revision</h1><a id="more"></a>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Why study distributed systems? (2)</p>
+<ul>
+<li>Partial Failures<ul>
+<li>Network (dropped msgs, partitions)</li>
+<li>Node failures</li>
+</ul>
+</li>
+<li>Concurrency<ul>
+<li>Nodes execute in parallel</li>
+<li>Msgs travel asynchronously</li>
+</ul>
+</li>
+</ul>
+<p>Two Generals’ Problem</p>
+<p>Concensus?</p>
+<ul>
+<li>All correct nodes eventually decide</li>
+<li>Every node decides the same</li>
+<li>Only decide on proposed values</li>
+</ul>
+<p>Database</p>
+<ul>
+<li>Concurrent changes to same data</li>
+<li>Nodes should agree on changes</li>
+</ul>
+<p>Use a kind of concensus: atomic commit {commit, abort}</p>
+<p>Given Atomic Broadcast, can use it to solve concensus</p>
+<p>=&gt; consensus cannot be solved in asynchronous system if a single node may crash</p>
+<ul>
+<li>No bound on time to deliver a msg</li>
+<li>No bound on time to compute</li>
+<li>Clocks are not synchronized</li>
+</ul>
+<p>=&gt; consensus solvable in synchronous system with up to N-1 crashes</p>
+<ul>
+<li>Known bound on time to deliver a msg</li>
+<li>know bound on time to compute</li>
+<li>known lower and upper bounds in physical block drift rate</li>
+</ul>
+<p>Partially synchronous system</p>
+<ul>
+<li>with up to N/2 crashes</li>
+</ul>
+<p>Consensus and Atomic Broadcast solvable with failure detectors</p>
+<p>Byzantine algorithms tolerate up to 1/3 Byzantine processes</p>
+<h2 id="Basic-Abstraction"><a href="#Basic-Abstraction" class="headerlink" title="Basic Abstraction"></a>Basic Abstraction</h2><p>Distributed algorithms are implemented as middleware between network(OS) and the application.</p>
+<p>1) Network protocols aren’t enough</p>
+<ul>
+<li>TCP only offered for one-to-one communication<br>How to group communication</li>
+</ul>
+<p>Abstractions in this course<br>Reliable Broadcast – Causal order broadcast – Total order broadcast</p>
+<p>2) N-N communication isn’t enough</p>
+<ul>
+<li>Need reliable high-level services</li>
+</ul>
+<p>Shared memory<br>Consensus<br>Atomic commit<br>RSM</p>
+<p>Reliable Distributed abstractions<br>ex: reliable broadcast (ensure the msg sent to a all or one); atomic commit (reach the same decision on whether to commit or abort a transaction)</p>
+<ul>
+<li>Event-based Component Model<br>Events(3) Msgs, Timers, Conditions</li>
+</ul>
+<p>Two types of events<br>Requests (Inputs) Indications (Outputs)</p>
+<p>Stack of Components in a single process</p>
+<p>Example:<br>Implements: JobHandler, intance jh<br>upon event &lt;jh, Submit|job&gt; do<br>    process(job)<br>    trigger&lt;jh, Confirm|job&gt;</p>
+<p>How to specify a distributed service? (4)</p>
+<ul>
+<li>Interface (aka Contract, API)<ul>
+<li>Requests</li>
+<li>Responses</li>
+</ul>
+</li>
+<li>Correctness Properties<ul>
+<li>Safety</li>
+<li>Liveness</li>
+</ul>
+</li>
+</ul>
+<p>safety 有限时间内可以被违背<br>= safty is false for an execution E if there exists a prefix such that all extensions are false<br>liveness 无限时间内才可以被达成<br>= liveness is true for an execution E if for all prefixes there exists an extension that is true</p>
+<ul>
+<li>Model<ul>
+<li>Assumptions on failure</li>
+<li>Assumptions on timing (amount of synchrony)</li>
+</ul>
+</li>
+</ul>
+<p>failure types (4) crash-stop, omissions, crash-recovery, byzantine:<br>Omission failure covers both (1) Send omission (Not send what has to be sent), (2) Receive omission<br>In Crash recovery failures, a process is faulty in an execution if it crashes and never recovers or recovers infinitely often. (amnesia: the recovered nodes might not be able to restore all of state)<br>In Byzantine failures, a process may behave arbitrarily: sending or updating its state as not specified by its algorithm, and behave maliciously (collude)</p>
+<p>Byzantine &gt; Crash-recovery &gt; Omission &gt; Crash</p>
+<p>Channel failure modes (5)</p>
+<ol>
+<li>Fair-Loss Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message sent with non-zero probability (no network partitions)<br>  FL1. Fair-Loss: if m is sent inf often by pi to pj, and neither      crash, then m is delivered infinitely often by pj<br>  FL2. Finite duplication<br>  FL3. No creation: No msg is delivered unless it was sent</li>
+</ul>
+<ol start="2">
+<li>Stubborn Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message sent infinitely many times<br>  SL1. Stubborn delivery: correct pi msg -&gt; pj, pj delivers infinitely<br>  SL2. No creation</li>
+</ul>
+<ol start="3">
+<li>Perfect Links</li>
+</ol>
+<ul>
+<li>Channels that delivers any message sent exactly once<br>  PL1. Reliable Delivery: correct pi msg -&gt; pj, pj eventually deliver<br>  PL2. No duplication: deliver once<br>  PL3. No creation</li>
+</ul>
+<p>use stubborn links to implement<br>keep log of received msgs in Delivered</p>
+<p>FIFO Perfect links<br>FIFO. Ordered Delivery</p>
+<ol start="4">
+<li>Logged Perfect Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message into a receiver’s persistent store (msg log)</li>
+</ul>
+<ol start="5">
+<li>Authenticated Perfect Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message m sent from process p to process q, that guarantees the m is actually sent from p to q</li>
+</ul>
+<p>Timing: Clocks =&gt; Lower and upper bounds on clock rate-drift and clock skew with regarding to real time<br>Causal order<br>a -&gt; b<br>(1) a occurs before b on the same process<br>(2) if a is a send(m) and b deliver(m), then a -&gt; b<br>Causal order is transitive<br>Two events are concurrent if not a -&gt; b and not b -&gt; a</p>
+<p>Partial &amp; Total Orders<br>Partial -&gt; doesn’t order concurrent events<br>Total -&gt; any two distinct clock values are ordered (adding pid)</p>
+<ul>
+<li>Implementation<ul>
+<li>Composed of other services</li>
+<li>Adheres to interface and satisfies correctness</li>
+<li>Has internal events</li>
+</ul>
+</li>
+</ul>
+<h2 id="Failure-Detectors"><a href="#Failure-Detectors" class="headerlink" title="Failure Detectors"></a>Failure Detectors</h2><p>Distributed algorithms are implemented as middleware between network(OS) and the application.</p>
+<p>1) Network protocols aren’t enough</p>
+<ul>
+<li>TCP only offered for one-to-one communication<br>How to group communication</li>
+</ul>
+<p>Abstractions in this course<br>Reliable Broadcast – Causal order broadcast – Total order broadcast</p>
+<p>2) N-N communication isn’t enough</p>
+<ul>
+<li>Need reliable high-level services</li>
+</ul>
+<p>Shared memory<br>Consensus<br>Atomic commit<br>RSM</p>
+<p>Reliable Distributed abstractions<br>ex: reliable broadcast (ensure the msg sent to a all or one); atomic commit (reach the same decision on whether to commit or abort a transaction)</p>
+<ul>
+<li>Event-based Component Model<br>Events(3) Msgs, Timers, Conditions</li>
+</ul>
+<p>Two types of events<br>Requests (Inputs) Indications (Outputs)</p>
+<p>Stack of Components in a single process</p>
+<p>Example:<br>Implements: JobHandler, intance jh<br>upon event &lt;jh, Submit|job&gt; do<br>    process(job)<br>    trigger&lt;jh, Confirm|job&gt;</p>
+<p>How to specify a distributed service? (4)</p>
+<ul>
+<li>Interface (aka Contract, API)<ul>
+<li>Requests</li>
+<li>Responses</li>
+</ul>
+</li>
+<li>Correctness Properties<ul>
+<li>Safety</li>
+<li>Liveness</li>
+</ul>
+</li>
+</ul>
+<p>safety 有限时间内可以被违背<br>= safty is false for an execution E if there exists a prefix such that all extensions are false<br>liveness 无限时间内才可以被达成<br>= liveness is true for an execution E if for all prefixes there exists an extension that is true</p>
+<ul>
+<li>Model<ul>
+<li>Assumptions on failure</li>
+<li>Assumptions on timing (amount of synchrony)</li>
+</ul>
+</li>
+</ul>
+<p>failure types (4) crash-stop, omissions, crash-recovery, byzantine:<br>Omission failure covers both (1) Send omission (Not send what has to be sent), (2) Receive omission<br>In Crash recovery failures, a process is faulty in an execution if it crashes and never recovers or recovers infinitely often. (amnesia: the recovered nodes might not be able to restore all of state)<br>In Byzantine failures, a process may behave arbitrarily: sending or updating its state as not specified by its algorithm, and behave maliciously (collude)</p>
+<p>Byzantine &gt; Crash-recovery &gt; Omission &gt; Crash</p>
+<p>Channel failure modes (5)</p>
+<ol>
+<li>Fair-Loss Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message sent with non-zero probability (no network partitions)<br>  FL1. Fair-Loss: if m is sent inf often by pi to pj, and neither      crash, then m is delivered infinitely often by pj<br>  FL2. Finite duplication<br>  FL3. No creation: No msg is delivered unless it was sent</li>
+</ul>
+<ol start="2">
+<li>Stubborn Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message sent infinitely many times<br>  SL1. Stubborn delivery: correct pi msg -&gt; pj, pj delivers infinitely<br>  SL2. No creation</li>
+</ul>
+<ol start="3">
+<li>Perfect Links</li>
+</ol>
+<ul>
+<li>Channels that delivers any message sent exactly once<br>  PL1. Reliable Delivery: correct pi msg -&gt; pj, pj eventually deliver<br>  PL2. No duplication: deliver once<br>  PL3. No creation</li>
+</ul>
+<p>use stubborn links to implement<br>keep log of received msgs in Delivered</p>
+<p>FIFO Perfect links<br>FIFO. Ordered Delivery</p>
+<ol start="4">
+<li>Logged Perfect Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message into a receiver’s persistent store (msg log)</li>
+</ul>
+<ol start="5">
+<li>Authenticated Perfect Links</li>
+</ol>
+<ul>
+<li>Channels delivers any message m sent from process p to process q, that guarantees the m is actually sent from p to q</li>
+</ul>
+<p>Timing: Clocks =&gt; Lower and upper bounds on clock rate-drift and clock skew with regarding to real time<br>Causal order<br>a -&gt; b<br>(1) a occurs before b on the same process<br>(2) if a is a send(m) and b deliver(m), then a -&gt; b<br>Causal order is transitive<br>Two events are concurrent if not a -&gt; b and not b -&gt; a</p>
+<p>Partial &amp; Total Orders<br>Partial -&gt; doesn’t order concurrent events<br>Total -&gt; any two distinct clock values are ordered (adding pid)</p>
+<ul>
+<li>Implementation<ul>
+<li>Composed of other services</li>
+<li>Adheres to interface and satisfies correctness</li>
+<li>Has internal events</li>
+</ul>
+</li>
+</ul>
+<h2 id="Reliable-Broadcast"><a href="#Reliable-Broadcast" class="headerlink" title="Reliable Broadcast"></a>Reliable Broadcast</h2><p>Fail-stop &lt;=&gt; synchronous (P + PL_Link)<br>Fail-silent &lt;=&gt; aynchronous (PL)<br>Fail-noisy &lt;=&gt; partially synchronous (*P + PL)<br>Fail-recovery &lt;=&gt; (stubborn links or a persistent logs)</p>
+<p>Quorums</p>
+<ul>
+<li>A set with at least floor(N/2) + 1 processes<br>resilience f max number of faulty processes &lt; N/2</li>
+</ul>
+<p>no deliver guarantees whether sender fails or not</p>
+<p>5 reliable broadcast abstractions<br>Best-Effort: Guarantees reliability only if sender is correct<br>Reliable broadcast: Guarantees reliability independent of whether sender is correct<br>Uniform reliable broadcast: Also considers behavior of failed nodes<br>FIFO reliable broadcast: Reliable broadcast with FIFO delivery order<br>Causal reliable broadcast: Reliable broadcast with causal delivery order</p>
+<p>Best-effort broadcast:<br>If p_i is <correct> and broadcast then eventually all <correct> processes deliver; (Best effort validity) + No duplication + No creation</correct></correct></p>
+<p>Reliable broadcast: (Best-effort + Agreement)考虑了发送者fail但有correct的node deliver的情况，这种情况下也必须其它correct的node都deliver<br>&lt;==&gt;If p_i is correct then eventually all correct processes deliver m. If p_i is faulty then either all correct processes eventually deliver m, or no correct process delivers m;</p>
+<p>Algo: Fail-Stop, Lazy Reliable Broadcast<br>Use P</p>
+<p>Agreement: If a correct node delivers m, then every correct process delivers m</p>
+<p>Uniform Reliable broadcast:<br>Reliable broadcast + Uniform Agreement (发送者fail，只要有node deliver，不管crash or correct，别的correctnode都deliver）<br>If a process delivers message m, then every correct process delivers m (Uniform agreement, take “keeping uniform with faulty process which delivers m” into consideration)</p>
+<ul>
+<li>one time unit is the longest message delay in E</li>
+</ul>
+<p>Complexity of lazy reliable broadcast<br>N processes<br>Best case: O(N) msgs<br>Worst case: O(N^2) msgs<br>Time complexity<br>Best case: 1 time unit<br>Worst case: 2 time units</p>
+<p>Eager Reliable Broadcast</p>
+<p>In lazy rb, we only use completness of P, not related to correctness<br>Q: replace P with *P?</p>
+<p>A: replace P with diamond P will lead to:<br>“Pk gets info that Pi has crashed” <-> false (Pi do not crash at all, although Pk will eventually get that Pi is alive, it currently thinks Pk is crashed.</-></p>
+<p>So:<br>Pk rebroadcast all msgs of Pi (it is unnecessary)</p>
+<p>only affect performance, not affect correctness</p>
+<p>For Uniform Eager Reliable Broadcast<br>We add a ack list; when all acks received, urb deliver.</p>
+<p>Uniform agreement need P.</p>
+<p>Majority-ACK Uniform RB &lt;==&gt;fail-silent<br>Resilience less than N/2</p>
+<p>for fail-stop algorithm<br>has resilience = N - 1<br>all acks</p>
+<p>weaker constraints on ACK less resilience tradeoff</p>
+<h2 id="Causal-Brpadcast"><a href="#Causal-Brpadcast" class="headerlink" title="Causal Brpadcast"></a>Causal Brpadcast</h2><p>For Chat application<br>We should maintain a causal (happen-before) order on the context<br>Uniform broadcast does not remedy this.<br>! Causal reliable broadcast solves this</p>
+<p>Causality of message<br>C1 (FIFO order) Some process pi broadcasts m1 before broadcasting m2<br>C2 (Network order) Some process pi delivers m1 and later broadcasts m2<br>C2 (transitivity) There is a message m’ such that m1 -&gt; m’ and m’ -&gt; m2</p>
+<p>Causal Broadcast<br>CB: If node pi delivers m1, then pi must have delivered every message causally preceding -&gt; m1 before m1</p>
+<p>CB’: If pj delivers m1 and m2 (保证要deliver), and m1 -&gt; m2, then pj must deliver m1 before m2</p>
+<p>满足CB’ 不满足CB的情况：图</p>
+<ol>
+<li>实现在rb基础上，使用P做GC<br>Fail-Silent No waiting causal broadcast</li>
+</ol>
+<ul>
+<li>Each message m carries ordered list of causally preceding messages in past_m</li>
+</ul>
+<p>message size grows, uaw Perfect detector P to garbage collect old messages</p>
+<ol start="2">
+<li>实现在FIFO-rb上<br>Fail-Silent Causal Broadcast</li>
+</ol>
+<ul>
+<li>Each msg carries a history, history is set of all causally preceding messages, and a vector timestamp</li>
+</ul>
+<p>Only deliver m once VCm ≤ VCi<br>Do Not deliver if VCm &gt; VCi or VCm ≠ VCi </p>
+<ul>
+<li><p>Single-Source FIFO order<br>Intuitively: Msgs from same node delivered in order sent<br>For all msgs m1 and m2 and all pi and pj,<br>  if p i broadcasts m1 before m2, and if pj delivers m2, then pj<br>  delivers m1 before m2<br>This formulation doesn’t require delivery of both msgs</p>
+</li>
+<li><p>Total Order<br>Intuitively: Everyone delivers everything in exact same order<br>For all messages m1 and m2 and all pi and pj,<br>if both pi and pj deliver both messages, then they deliver them in<br>the same order<br>This formulation doesn’t require delivery of both msgs<br>Everyone delivers same order, maybe not send order!</p>
+</li>
+</ul>
+<p>如果不是single-source fifo必不是total order</p>
+<p>Hierarchy 图</p>
+<h2 id="Distributed-Shared-Memory"><a href="#Distributed-Shared-Memory" class="headerlink" title="Distributed Shared Memory"></a>Distributed Shared Memory</h2><p><a href="https://en.wikipedia.org/wiki/Shared_register" target="_blank" rel="noopener">wiki</a>The memory location which is concurrently accessed (read/write/CAS) is sometimes called a register.</p>
+<p>DSM interface (4)<br>read invokation, read response, write invocation, write response</p>
+<p>Regular Register (1, N)</p>
+<ul>
+<li>Termination</li>
+</ul>
+<ul>
+<li>Each read and write of a correct node completes</li>
+</ul>
+<ul>
+<li>Validity<br>Read returns last value written if</li>
+</ul>
+<ul>
+<li>Not concurrent with another write and</li>
+<li>Not concurrent with a failed write<br>Otherwise may return <strong>last</strong> or <strong>concurrent</strong> “value”</li>
+</ul>
+<hr>
+<ol>
+<li><p>Read-One Write-All (1, N) algorithm<br>read locally没有RTT，之后的算法都是read globally<br>P22 Postpone write responses to ensure<br>the writer does not return until it knows that the reader delivers the value that is broadcasted<br>写有1个RTT<br>2 communication steps (broadcast and Ack from all)<br>O(N) messages<br>resilience: N-1太高</p>
+</li>
+<li><p>Majority voting (1,N) algorithm<br>Each process stores the value of all registers<br>=&gt; write(r, v)<br>UPDATE PHASE<br>ts++(ts is a sequence number initialized to zero at the writer and incremented at each write)<br>timestamp-value pair, tvp = (ts, v)<br>send 一个update request<br>pj updates r = max(r, (ts, v)) and responds with ACK<br>QUERY PHASE<br>pi sends query, receives response (ts,v), picks max(ts, v)</p>
+</li>
+</ol>
+<p>!Avoid old writes overiting new write<br>write will be ignored if it has lower timestamp</p>
+<p>2 communication steps (one round trip)<br>O(N) messages<br>resilience: f &lt; floor(N/2)</p>
+<p>Atomic/Linearizability vs. Sequential Consistency<br>sequential order vs. global time order<br>看例子</p>
+<p>Majority voting算法是regular register但是如何保证Atomic的？</p>
+<ol start="3">
+<li><p>(SWMR)Read-Impose Write Majority (1, N)<br>P66 When reading, also do an update (if ts same, then just return) before responding<br>读后写，写上一个写的值</p>
+</li>
+<li><p>(MWMR linerizable)Atomic Register Read-impose write-consult-majority (N, N)具有linearizability</p>
+</li>
+</ol>
+<ul>
+<li>Before writing, read from majority to get last ts</li>
+<li>Do a query phase to get the latest timestamp before the update phase</li>
+<li>为了synchronize ts</li>
+<li>Two concurrent writes with same ts? compare process identifier</li>
+</ul>
+<p>write operation<br>query + update phase<br>write needs 2 rtrips<br>One for the timestamp<br>One for broadcast-ACK<br>写前读，读上一个ts + 读后写，写上一个写的值<br>read needs 2 round-trips<br>one for read<br>one for impose if necessary</p>
+<ol start="5">
+<li>(MWMR sequential consistent)==&gt;LT<br>Logical Time algorithm (LT)<br>(N,N) Seq Consistent<br>Writes in 1 RTT and reads in 2 RTTs<br>Tolerates f&lt;n/2 faulty processes<br>Linearizability in logical time allows compositionality</li>
+</ol>
+<p>tvp = ((lt, i), v)<br>((10,1),5) timestamp 10, pid 1,value 5</p>
+<p>Livness(3)<br>Wait-free (no deadlocks, no live-locks, no starvation)<br>Lock-free/non-blocking (no deadlocks, no live locks, maybe starvation)<br>Obstruction free/solo-termination (no deadlocks, maybe live-locks, maybe starvation)</p>
+<p>总结<br>Distributed Algorithms</p>
+<p>===&gt;the weak model (regular register)</p>
+<ul>
+<li>SWMR (Single write multiple read) regular registers</li>
+</ul>
+<p>Bogus algo (did not work)<br>Centralized(no failures)<br>Read-One Write-All Algorithm (P)<br>Majority Voting(No FD)</p>
+<p>===&gt;the strong model(atomic register)<br>atomic register</p>
+<ul>
+<li><p>SWMR linearizable registers<br>  read-impose idea</p>
+</li>
+<li><p>MWMR linearizable registers<br>  read-impose write-consult</p>
+</li>
+<li>MWMR sequentially consistent registers<br>  read-impose write-consult-majority</li>
+</ul>
+<p>Compare the performance and resilience of algorithms</p>
+<h2 id="Consensus"><a href="#Consensus" class="headerlink" title="Consensus"></a>Consensus</h2><p>Single Value Consensus properties (4)<br>Validity: Any value decided is a value proposed<br>Agreement: No two correct nodes decide differently<br>termination: Every correct node eventually decides<br>integrity: A node decides at most once</p>
+<p>do not care about crashed nodes</p>
+<p>怎样避免orphan message（之前propose的值后到了，不应该再decide了）<br><strong>Invariant</strong><br>adopt if proposer p is ranked higher than lastprop<br>otherwise p has crashed and should be ignored</p>
+<p>Implements: Hierarchical Consensus(c)<br>Uses:<br>beb + P<br>第几轮就是第几个process decide和broadcast</p>
+<p>Validity: Always decide own proposal or adpoted value<br>Integrity: Rounds increase monotonically, A node only decide once in the round it is leader<br>Termincation: Every correct node makes it to the round it is leader, if some leader fails, completeness of P ensures progress. If leader correct, validity of BEB ensures delivery<br>Agreement: No two correct nodes decide differently</p>
+<p>How many failures can it tolerate? N-1</p>
+<p>Uniform Consensus properties (4)<br>Uniform Agreement (care about crashed nodes)</p>
+<p>Possible with weaker FD than P?<br>Yes! use Strong Detector (S)<br>Strong completeness<br>Weak Accuracy: the “accurate” corect leader will BEB value and final decision is v by all</p>
+<p>Eventually perfect detector, cannot solve<br>consensus with resilience t ≥ n/2 </p>
+<h2 id="Paxos"><a href="#Paxos" class="headerlink" title="Paxos"></a>Paxos</h2><p>Single Value Uniform Consensus</p>
+<ul>
+<li>Validity (only proposed -&gt; decided)</li>
+<li>Uniform Agreement (No diff decide)</li>
+<li>Integrity (at most once)</li>
+<li>Termination (eventually decide a value)</li>
+</ul>
+<p>not solvable in Fail-Silent (aynchronous sytem model)</p>
+<p>所以assume<br>Partially synchronous system + fail-noisy model + Message duplication, loss, re-ordering</p>
+<p>use omega(evetual leader election to elect a single proposer)</p>
+<ul>
+<li>Proposer imposes its proposal to everyone</li>
+<li>Everyone decides<br>问题是<br>serveral processes might initially be proposers<br>多个process都能propose<br>使用abortable consensus 解决<br>omega ensures evetually 1 proposer succeeds (liveness)</li>
+</ul>
+<p>PAXOS<br>proposers (impose proposal to set of acceptors)<br>acceptors (may accept values issued by proposers)<br>learner (will decide depending on acceptors acceptances)</p>
+<p>centralized因为面临单点故障，不行</p>
+<p>there will be a single proposer at least providing obstruction-free progress<br>不能无脑选第一个<br>distinguish proposals with unique seq number (ballot number)<br>不能restart（这样就chose了两个值）</p>
+<hr>
+<p>P1 An acceptor accepts first proposal it receives (ensures obstruction-free progress and validity)<br>P2 If v is chosen, every higher proposal chosen has value v (ensures agreement, integrity trivial to implement)<br>P2a( lemma方便实现) every higher proposal accepted has value v<br>P2b (加强) every higher proposal issued has value v<br>P2c If any proposal (n,v) is issued, there is a majority set S of acceptors such that either<br>(a) no one in S has accepted any proposal numbered less than n<br>(b) v is the value of the highest proposal among all proposals less than n accepted by acceptors in S</p>
+<p>A proposer at round n needs a query phase to get the value of highest round number + a promise that the state of S does not change until round n</p>
+<p>总体流程</p>
+<ol>
+<li>proposer pick unique seq n, send prepare(n) to acceptors</li>
+<li>acceptors 承认不会接收n以下的proposals（freeze）, 发送最高n的accepted proposal</li>
+<li>proposer收到majority的promise, 取最高n的proposed value (如果没有就任取一个v（说明第一次）)进行accept(n, v)</li>
+<li>acceptor接收了(n, v)，如果无接收prepare m&gt;n, 则accept proposal (ack); 否则reject(nack)</li>
+<li>Proposer 接收到majority的response，decide否则abort</li>
+</ol>
+<p>可能abort的点</p>
+<ul>
+<li>Contention (multiple proposals competing)</li>
+<li>Message loss (not getting an ack)</li>
+<li>process failue (proposer dies)</li>
+</ul>
+<p>Optimizations</p>
+<ul>
+<li>Paxos (AC) in a nutshell</li>
+</ul>
+<p>Necessary:<br>rej accept(n,v) if answered prepare(m): m&gt;n</p>
+<p>Optimizations:</p>
+<ol>
+<li>rej prepare(n) if answered prepare(m): m&gt;n</li>
+<li>rej accept(n,v) if answered accept(m,u): m&gt;n</li>
+<li>reject prepare(n) if answered accept(m, u): m&gt;n</li>
+<li>ignore old msgs to proposals that got majority</li>
+</ol>
+<p>Proposer skips the accept phase if a majority of acceptors return the same value v<br>performance++</p>
+<p>只要有stable storage可以应用到fail recover model</p>
+<h2 id="RSM-Replicated-State-Machine"><a href="#RSM-Replicated-State-Machine" class="headerlink" title="RSM (Replicated State Machine)"></a>RSM (Replicated State Machine)</h2><p>multi-paxos:</p>
+<p>ProCmds = {}<br>Log = &lt;&gt;<br>s0(initial state)<br>proposed = false</p>
+<p>A client q wants to execute a command C, it reliably rb-broadcast &lt;C, Pid_q&gt; to all servers<br>upon delivery &lt;C,Pid_q&gt; at pj, the command pair is added to ProCmds unless it is already in Log</p>
+<p>Validity<br>● If process p decides v then v is a sequence of proposed commands<br>(without duplicates)<br>Uniform Agreement<br>● If process p decides u and process q decides v then one is a prefix of<br>the other<br>Integrity<br>● If process p decides u and later decides v then u is a strict prefix of v<br>Termination (liveness)<br>● If command C is proposed by a correct process then eventually every<br>correct process decides a sequence containing C</p>
+<p>Agree on (non-duplicate) commands<br>allow to issue the same command C multiple times</p>
+<p>Initial state<br>Propoer:<br>np:=0 proposer’s current round number<br>vp:=&lt;&gt; proposer’s current value (empty sequence)</p>
+<p>Acceptor:<br>npromise:=0 promise not to accept in lower rounds<br>na:=0 round number in which a value is accepted<br>va:=&lt;&gt; accepted value(empty sequence)</p>
+<p>Learner<br>vd:=&lt;&gt; decided value(empty sequence)</p>
+<p>看ppt图</p>
+<p>依然有一些问题<br>● A proposer can run only one proposal until decide before taking the<br>next proposal. No pipelining of proposals<br>● Multiple proposers may lead to live-locks (liveness violation)<br>● Two round-trips for each sequence chosen </p>
+<p>use BLE to make a single proposer running for a longer period of time as a leader</p>
+<p>BLE1: Eventually every correct process trusts some correct correct process if a majority are correct<br>BLE2: Eventually no two correct processes trust different correct processes</p>
+<p>We assume initially fail-noisy<br>but net is weaker model that may drop msg and process crash and recover</p>
+<p>Majority requirement</p>
+<ul>
+<li>Each correct process will trust a leader only if the leader’s max ballot is among the collected ballots from a majority of processes</li>
+<li>Monotonically increasing ballots<br>Every process p that do not receive the leader’s ballot (n, pidL) among collected ballots consider the leader has crashes p increases his own ballot (n+1, pidp)</li>
+</ul>
+<p>Eventual agreement&lt;=&gt; BLE2<br>Completeness&lt;=&gt; BLE1</p>
+<h2 id="Leader-Based-Sequence-Paxos"><a href="#Leader-Based-Sequence-Paxos" class="headerlink" title="Leader Based Sequence Paxos"></a>Leader Based Sequence Paxos</h2><p>Assume eventual leader election abstraction with a ballot number BLE<br>BLE satisfies completeness and eventually accuracy and also monotonically unique ballots</p>
+<p>P4 inefficient</p>
+<ul>
+<li>有多个proposer时，conflicts和restarts are likely (higher load -&gt; more conflicts)</li>
+<li>2 round of msgs for each value chosen (Prepare, Accept)</li>
+</ul>
+<p>Solution:</p>
+<ul>
+<li>pick a leader (L,n) where n is a unique higher round number</li>
+<li>the leader acts as sole Proposer for round n</li>
+<li>After first Prepare (if not aborted) only perform Accepts until aborted by another Leader where n’ &gt; n</li>
+</ul>
+<p>Allow issuing and accepting multiple proposals in round n</p>
+<p>Initial State for Sequence Paxos</p>
+<ul>
+<li><p>Proposers<br>nL=0, vL=      leader’s current round number, proposed value<br>propCmds=&lt;&gt;     leader’s current set of proposed commands(empty set)<br>las=[0]^N     length of longest accepted sequence per acceptor<br>lc=0        length of longest chosen sequence<br>state={(leader, prepare), (leader, accept), follower}</p>
+</li>
+<li><p>Acceptor<br>nprom=0     Pomise not to accept in lower rounds<br>na=0         round number in which a value is accpeted<br>va=&lt;&gt;        Accepted value(empty sequence)</p>
+</li>
+<li><p>Learner    Decide value(empty sequence)</p>
+</li>
+</ul>
+<p>Removing redundancy of vL, va and vd</p>
+<p>removing vL:<br>When p becomes a leader, it is possible to remove the need to<br>store the sequences vL and va separately at the leader </p>
+<p>removing vd: at decide phase</p>
+<p>add a new assumption<br>A3: FIFO Perfect Links</p>
+<p>partially sync for BLE</p>
+<p>but async for LBSP</p>
+<h2 id="Reconfiguration"><a href="#Reconfiguration" class="headerlink" title="Reconfiguration"></a>Reconfiguration</h2><p>A replicated state machine is running on a set of N processes</p>
+<p>Impossible to know if a process is faulty or slow in asychronous system</p>
+<ul>
+<li>must be able to replace any process</li>
+</ul>
+<p>this is called reconfiguration</p>
+<p>Each configuration is conceptually an instance of Sequence-Paxos<br>replicas in configuration c1 = {r11,r12,r13,r14}<br>A process may act as multiple replicas in different configurations<br>e.g. p1 is {r01, r11, r21}</p>
+<p>if seq v is issued in round n then v is an extension of all sequences chosen in rounds &lt;= n</p>
+<p>stop-sign - last command - final sequence</p>
+<p>rij: replica j in config i</p>
+<p>Overlapping configurations</p>
+<p> A process have replicas in multiple configurations<br>But can only be running in one configuration at any<br>time</p>
+<h2 id="Time-and-Clocks-in-DS"><a href="#Time-and-Clocks-in-DS" class="headerlink" title="Time and Clocks in DS"></a>Time and Clocks in DS</h2><p>Motivation for using physical clocks<br>Consider a slightly stronger system model:</p>
+<ul>
+<li>Computation: no bounds on time to take a step</li>
+<li>Communication: no bounds on latency</li>
+<li>Clocks: Lower and upper bounds on clock rate</li>
+</ul>
+<ol>
+<li>Time-based leader leases</li>
+</ol>
+<p>network partition P17<br>one is elected as leader but the original leader never hears about that</p>
+<p>A propose p to become leader: sends a request (prepare) to acceptors</p>
+<ul>
+<li>An acceptor gives a time-based leader lease to p, lasting for 10 seconds</li>
+<li>If a proposer gets leases from a majority of acceptors, then proposer holds lease on group and becomes a leader</li>
+<li>In the time until the first acceptor lease expires, the proposer knows that no other proposer can hold the lease on the group<br>此时leader可以从local state里读然后直接返回</li>
+</ul>
+<p>两个问题<br>asynchronous network<br>clock drift</p>
+<p>P34<br>如果proposer（receive lease的人）时钟比较快，那么leader会先取消自己的时钟，所以不会影响safety</p>
+<p>反之，如果acceptor（give lease的人）时钟比较快，就会影响safety</p>
+<ol start="2">
+<li>Shared memory using clocks</li>
+</ol>
+<p>Review of shared memory:<br>Leases at proposer<br>The Read-Impose Write-Consult_Majority algorithm does 2 round-trips to a majority of processes for both reads and writes<br>…</p>
+<p>need synchronized clocks</p>
+<p>Interval Clocks<br>Ci(t) = (lo, hi)</p>
+<p>the correct time t is guaranteed to be in interval<br>Ci(t).lo &lt;= t &lt;= Ci(t).hi</p>
+<p>Ci read at t1, Cj read at t2, and t1 &lt; t2<br>Ci(t1).lo &lt; Cj(t2).hi</p>
+<p>use ICs to remove <strong>query phase in write operations</strong></p>
+<ol>
+<li>p1 must wait until ts(o1).t &lt;= C1(t1).lo   </li>
+<li>ts(o2).t = C2(t2).hi   (invoke write o2)</li>
+</ol>
+<p>因为t1 &lt; t2 所以 C1(t1).lo &lt; C2(t2).hi<br>Hence: ts(o1) &lt; ts(o2)</p>
+<h2 id="Consistent-Snapshot"><a href="#Consistent-Snapshot" class="headerlink" title="Consistent Snapshot"></a>Consistent Snapshot</h2><p>failure recovery and reconfiguration</p>
+<p>SNAP -&gt; Restart system from snapshot<br>    -&gt; restart system with new configuration</p>
+<p>consistent cut<br>preserves causality</p>
+<p>chandy cut is not enough<br>epoch cut</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+      <div>
+        
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Csh</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://spycsh.github.io/blog/2021/03/18/Distributed-Systems-revision/" title="Distributed Systems revision">https://spycsh.github.io/blog/2021/03/18/Distributed-Systems-revision/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/Distributed-System/" rel="tag"># Distributed System</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2021/02/22/dirty-read-phantom-read-and-unrepeatable-read/" rel="next" title="dirty read, phantom read, and unrepeatable read">
+                <i class="fa fa-chevron-left"></i> dirty read, phantom read, and unrepeatable read
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/blog/images/Haruhi.jpg" alt="Csh">
+            
+              <p class="site-author-name" itemprop="name">Csh</p>
+              <p class="site-description motion-element" itemprop="description">TEST</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/blog/archives">
+                
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/blog/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">0</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/blog/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/Spycsh" title="GitHub &rarr; https://github.com/Spycsh" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://757407490@qq.com" title="QQ &rarr; https://757407490@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/blog/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Distributed-Systems-revision"><span class="nav-number">1.</span> <span class="nav-text">Distributed Systems revision</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-Abstraction"><span class="nav-number">1.2.</span> <span class="nav-text">Basic Abstraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Failure-Detectors"><span class="nav-number">1.3.</span> <span class="nav-text">Failure Detectors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reliable-Broadcast"><span class="nav-number">1.4.</span> <span class="nav-text">Reliable Broadcast</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Causal-Brpadcast"><span class="nav-number">1.5.</span> <span class="nav-text">Causal Brpadcast</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Distributed-Shared-Memory"><span class="nav-number">1.6.</span> <span class="nav-text">Distributed Shared Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consensus"><span class="nav-number">1.7.</span> <span class="nav-text">Consensus</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Paxos"><span class="nav-number">1.8.</span> <span class="nav-text">Paxos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RSM-Replicated-State-Machine"><span class="nav-number">1.9.</span> <span class="nav-text">RSM (Replicated State Machine)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Leader-Based-Sequence-Paxos"><span class="nav-number">1.10.</span> <span class="nav-text">Leader Based Sequence Paxos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reconfiguration"><span class="nav-number">1.11.</span> <span class="nav-text">Reconfiguration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Time-and-Clocks-in-DS"><span class="nav-number">1.12.</span> <span class="nav-text">Time and Clocks in DS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consistent-Snapshot"><span class="nav-number">1.13.</span> <span class="nav-text">Consistent Snapshot</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Csh</span>
+
+  
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.6.0</div>
+
+
+
+
+-->
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/blog/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/blog/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/blog/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/blog/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/blog/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>
