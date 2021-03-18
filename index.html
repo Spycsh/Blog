@@ -716,12 +716,24 @@
                 
               
 
-              <time title="创建时间：2021-01-28 20:20:47 / 修改时间：23:40:31" itemprop="dateCreated datePublished" datetime="2021-01-28T20:20:47+01:00">2021-01-28</time>
+              <time title="创建时间：2021-01-28 20:20:47" itemprop="dateCreated datePublished" datetime="2021-01-28T20:20:47+01:00">2021-01-28</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-18 21:55:54" itemprop="dateModified" datetime="2021-03-18T21:55:54+01:00">2021-03-18</time>
               
             
           </span>
@@ -755,46 +767,16 @@
 
       
         
+          <h1 id="Distributed-Framework-and-Dubbo"><a href="#Distributed-Framework-and-Dubbo" class="headerlink" title="Distributed Framework and Dubbo"></a>Distributed Framework and Dubbo</h1>
+          <!--noindex-->
           
-            <h1 id="Distributed-Framework-and-Dubbo"><a href="#Distributed-Framework-and-Dubbo" class="headerlink" title="Distributed Framework and Dubbo"></a>Distributed Framework and Dubbo</h1><h2 id="What-is-Distributed-System"><a href="#What-is-Distributed-System" class="headerlink" title="What is Distributed System?"></a>What is Distributed System?</h2><p>a collection of independent comptuters which serve like a coherent system to users.</p>
-<h2 id="Framework-transition-and-why-we-need-Distributed-Framework"><a href="#Framework-transition-and-why-we-need-Distributed-Framework" class="headerlink" title="Framework transition and why we need Distributed Framework?"></a>Framework transition and why we need Distributed Framework?</h2><h3 id="All-in-One-Architecture"><a href="#All-in-One-Architecture" class="headerlink" title="All in One Architecture"></a>All in One Architecture</h3><p>Initially, we have one simple application, on which all the functionalities are integrated, when we have only a few users. At that time, ORM is necessary because it simplify the CRUD processes.</p>
-<p>When there are more and more users, we surely need more servers to bear more pressure (One application Multiple servers). Therefore we need more servers ro bear the pressure together (use Ngnix to balance overload). However that will cause two problems:</p>
-<ul>
-<li><p>Difficult to extend<br>When we modify one func of one server, we need to package the whole application again to other servers.</p>
-</li>
-<li><p>Difficult to collaborate</p>
-</li>
-</ul>
-<h3 id="Vertical-Architecture"><a href="#Vertical-Architecture" class="headerlink" title="Vertical Architecture"></a>Vertical Architecture</h3><p>different modules of applications (e.g. User/Shopping Cart/Payment), assign different number of servers to modules based on demands. We will meet the problems and we should also:  </p>
-<ul>
-<li><p>View/ Logics should be divided </p>
-</li>
-<li><p>Applications cannot be fully seperated, some should interact</p>
-</li>
-</ul>
-<h3 id="RPC-Architecture"><a href="#RPC-Architecture" class="headerlink" title="RPC Architecture"></a>RPC Architecture</h3><p>But there yield another problem, how to interact between Web view and Services logics as they are divided?</p>
-<p>Answer: Use RPC (Remote Process Call).</p>
-<p>Therefore, we need a distributed service framework to handle the RPC. And we also need a <strong>scheduler</strong> to balance the load.</p>
-<h2 id="RPC-problems"><a href="#RPC-problems" class="headerlink" title="RPC problems"></a>RPC problems</h2><p>RPC is a method that used by one service on one server A to call the procedure on another server B.</p>
-<p>Both server A and B should have its own stub (helper) to handle the sending messages(functions/parameters)and returning messages(results). The RPC is an aynchronous process. To send or receive the messages the stub should firstly serialize or deserialize the objects.</p>
-<p>The core problems in an RPC framework:</p>
-<ul>
-<li>how efficient to establish connection</li>
-<li>how efficient to serialize/deserialize</li>
-</ul>
-<h2 id="RPC-framework-Dubbo"><a href="#RPC-framework-Dubbo" class="headerlink" title="RPC framework - Dubbo"></a>RPC framework - Dubbo</h2><p><a href="https://dubbo.apache.org/en/" target="_blank" rel="noopener">https://dubbo.apache.org/en/</a></p>
-<p><img src="https://raw.githubusercontent.com/apache/dubbo-website/master/static/imgs/architecture.png" alt="arch"></p>
-<p>Dubbo is a framework with following features:</p>
-<ul>
-<li>Interface-based High-performance RPC</li>
-<li>Intelligent load balance</li>
-<li>Automatic service registration and discovery (“recommend”)</li>
-<li>High extensibility (micro-kernal and plugin design)</li>
-<li>Runtime traffic routing (blue-green deployment, some requests use new services, some use old services)</li>
-<li>Visualization</li>
-</ul>
-
-          
+            <div class="post-button text-center">
+              <a class="btn" href="/blog/2021/01/28/Disributed-Framework-and-Dubbo/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
         
       
     </div>
