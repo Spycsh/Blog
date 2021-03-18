@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Distributed Systems revision">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-03-18T20:53:26.896Z">
+<meta property="og:updated_time" content="2021-03-18T23:13:29.229Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Distributed Systems revision">
 <meta name="twitter:description" content="Distributed Systems revision">
@@ -410,12 +410,24 @@
                 
               
 
-              <time title="创建时间：2021-03-18 21:42:23 / 修改时间：21:53:26" itemprop="dateCreated datePublished" datetime="2021-03-18T21:42:23+01:00">2021-03-18</time>
+              <time title="创建时间：2021-03-18 21:42:23" itemprop="dateCreated datePublished" datetime="2021-03-18T21:42:23+01:00">2021-03-18</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-19 00:13:29" itemprop="dateModified" datetime="2021-03-19T00:13:29+01:00">2021-03-19</time>
               
             
           </span>
@@ -926,8 +938,25 @@
 <p>因为t1 &lt; t2 所以 C1(t1).lo &lt; C2(t2).hi<br>Hence: ts(o1) &lt; ts(o2)</p>
 <h2 id="Consistent-Snapshot"><a href="#Consistent-Snapshot" class="headerlink" title="Consistent Snapshot"></a>Consistent Snapshot</h2><p>failure recovery and reconfiguration</p>
 <p>SNAP -&gt; Restart system from snapshot<br>    -&gt; restart system with new configuration</p>
-<p>consistent cut<br>preserves causality</p>
-<p>chandy cut is not enough<br>epoch cut</p>
+<p>S1: Termination: Eventuallt every process records its state<br>S2: Validity: All recorded states correspond to a consistent cut of the execution</p>
+<p>Chandy Lamport Algorithm</p>
+<ul>
+<li>FIFO Reliable Channels</li>
+<li>Single Initiating Process pi</li>
+<li>Strong Connectivity 强连通</li>
+</ul>
+<p>Design goal:<br>Obstruction-free: run concurrently but not alter underlying computation</p>
+<p>Intuition:<br>Disseminate a special message to mark events before and after the consistent cut</p>
+<p>Termination is still satisfied if the protocol is initiated by a set of processes that can reach all tasks.</p>
+<p>Epoch Snapshotting:<br>make production-grade data processing systems reliable</p>
+<p>Previous approaches</p>
+<ul>
+<li>Complex Workarounds (e.g., duplicate elimination, input logging, acks) </li>
+<li>Strong Assumptions (idempotent operations, key vs task level causal order) </li>
+<li>External State Management (transactional external commits per action</li>
+</ul>
+<p>Epoch-based stream execution the intuition<br>for each epoch<br>input: deterministic input streams &amp; task states<br>stream processing system<br>success: commit system configuration<br>failure: abort and start from previous epoch</p>
+<p>consistent cut is not enough<br>epoch cut support the large stream processing system</p>
 
       
     </div>
