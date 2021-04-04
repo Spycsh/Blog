@@ -123,28 +123,25 @@
 
 
 
-  <meta name="description" content="SVM公式推导和原理解析">
-<meta name="keywords" content="Machine Learning">
+  <meta name="description" content="分布式系统原理">
+<meta name="keywords" content="TEST">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SVM公式推导和原理解析">
-<meta property="og:url" content="https://spycsh.github.io/blog/2020/12/16/SVM公式推导和原理解析/index.html">
+<meta property="og:title" content="分布式系统原理">
+<meta property="og:url" content="https://spycsh.github.io/blog/2021/04/02/分布式系统原理/index.html">
 <meta property="og:site_name" content="Spycsh">
-<meta property="og:description" content="SVM公式推导和原理解析">
+<meta property="og:description" content="分布式系统原理">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/Spycsh/blog/master/2020/12/16/SVM%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC%E5%92%8C%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/1.jpg">
-<meta property="og:image" content="https://raw.githubusercontent.com/Spycsh/blog/master/2020/12/16/SVM%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC%E5%92%8C%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/2.jpg">
-<meta property="og:updated_time" content="2021-01-24T00:01:56.902Z">
+<meta property="og:updated_time" content="2021-04-04T16:00:27.250Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SVM公式推导和原理解析">
-<meta name="twitter:description" content="SVM公式推导和原理解析">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/Spycsh/blog/master/2020/12/16/SVM%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC%E5%92%8C%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/1.jpg">
+<meta name="twitter:title" content="分布式系统原理">
+<meta name="twitter:description" content="分布式系统原理">
 
 
 
 
 
 
-  <link rel="canonical" href="https://spycsh.github.io/blog/2020/12/16/SVM公式推导和原理解析/">
+  <link rel="canonical" href="https://spycsh.github.io/blog/2021/04/02/分布式系统原理/">
 
 
 
@@ -154,7 +151,7 @@
   };
 </script>
 
-  <title>SVM公式推导和原理解析 | Spycsh</title>
+  <title>分布式系统原理 | Spycsh</title>
   
 
 
@@ -368,7 +365,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2020/12/16/SVM公式推导和原理解析/">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/04/02/分布式系统原理/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Csh">
@@ -385,7 +382,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">SVM公式推导和原理解析
+          <h1 class="post-title" itemprop="name headline">分布式系统原理
 
               
             
@@ -413,7 +410,7 @@
                 
               
 
-              <time title="创建时间：2020-12-16 22:20:43" itemprop="dateCreated datePublished" datetime="2020-12-16T22:20:43+01:00">2020-12-16</time>
+              <time title="创建时间：2021-04-02 17:41:08" itemprop="dateCreated datePublished" datetime="2021-04-02T17:41:08+02:00">2021-04-02</time>
             
 
             
@@ -430,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-01-24 01:01:56" itemprop="dateModified" datetime="2021-01-24T01:01:56+01:00">2021-01-24</time>
+                <time title="修改时间：2021-04-04 18:00:27" itemprop="dateModified" datetime="2021-04-04T18:00:27+02:00">2021-04-04</time>
               
             
           </span>
@@ -463,9 +460,9 @@
       
 
       
-        <h1 id="SVM公式推导和原理解析"><a href="#SVM公式推导和原理解析" class="headerlink" title="SVM公式推导和原理解析"></a>SVM公式推导和原理解析</h1><a id="more"></a>
-<p><img src="https://raw.githubusercontent.com/Spycsh/blog/master/2020/12/16/SVM%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC%E5%92%8C%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/1.jpg"></p>
-<p><img src="https://raw.githubusercontent.com/Spycsh/blog/master/2020/12/16/SVM%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC%E5%92%8C%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/2.jpg"></p>
+        <h1 id="分布式系统原理"><a href="#分布式系统原理" class="headerlink" title="分布式系统原理"></a>分布式系统原理</h1><a id="more"></a>
+<p>本文基于ID2203 Distributed Systems, Advanced Course课程，对整个分布式领域的问题进行一个总结。课程参考了<a href="https://www.springer.com/gp/book/9783540288466" target="_blank" rel="noopener">Introduction to Reliable Distributed Programming</a>, <a href="https://www.amazon.com/Intro-Distributed-Algorithms-2ed-Gerard/dp/0521794838" target="_blank" rel="noopener">Introduction to Distributed Algorithms</a> 等书籍。前者更偏向代码实现，书中的伪代码清晰易懂，有兴趣的读者可以买一本看看。</p>
+<p>待更。</p>
 
       
     </div>
@@ -499,7 +496,7 @@
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
     
-    <a href="https://spycsh.github.io/blog/2020/12/16/SVM公式推导和原理解析/" title="SVM公式推导和原理解析">https://spycsh.github.io/blog/2020/12/16/SVM公式推导和原理解析/</a>
+    <a href="https://spycsh.github.io/blog/2021/04/02/分布式系统原理/" title="分布式系统原理">https://spycsh.github.io/blog/2021/04/02/分布式系统原理/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
@@ -510,12 +507,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/blog/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
-          
-        </div>
-      
 
       
       
@@ -525,8 +516,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2020/11/07/多分类AUC计算/" rel="next" title="多分类AUC计算">
-                <i class="fa fa-chevron-left"></i> 多分类AUC计算
+              <a href="/blog/2021/04/02/电影推荐系统设计/" rel="next" title="电影推荐系统设计">
+                <i class="fa fa-chevron-left"></i> 电影推荐系统设计
               </a>
             
           </div>
@@ -534,10 +525,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/blog/2021/01/24/Byzantine-Leader-Election/" rel="prev" title="Byzantine Leader Election">
-                Byzantine Leader Election <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -733,7 +720,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SVM公式推导和原理解析"><span class="nav-number">1.</span> <span class="nav-text">SVM公式推导和原理解析</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式系统原理"><span class="nav-number">1.</span> <span class="nav-text">分布式系统原理</span></a></li></ol></div>
             
 
           </div>
