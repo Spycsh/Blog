@@ -365,6 +365,331 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/06/02/DDAI 数据密集型应用笔记/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Csh">
+      <meta itemprop="description" content="TEST">
+      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spycsh">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/blog/2021/06/02/DDAI 数据密集型应用笔记/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">DDAI 数据密集型应用笔记</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-06-02 22:15:00 / 修改时间：23:06:54" itemprop="dateCreated datePublished" datetime="2021-06-02T22:15:00+02:00">2021-06-02</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Design-Data-intensive-applications-笔记"><a href="#Design-Data-intensive-applications-笔记" class="headerlink" title="Design Data-intensive applications  笔记"></a>Design Data-intensive applications  笔记</h1><h2 id="可靠，可扩展，可维护的应用系统"><a href="#可靠，可扩展，可维护的应用系统" class="headerlink" title="可靠，可扩展，可维护的应用系统"></a>可靠，可扩展，可维护的应用系统</h2><p>一个常见的应用系统应包括以下模块：数据库、高速索引（memcache，redis）、索引（ES)、流式处理（异步）、批处理（定期处理大量累计数据）。</p>
+<p>API客户端请求进来，应首先检测数据缓存(redis)是否命中，命中就从内存读请求，否则更新数据库-&gt;数据库应数据变化更新缓存。同时更新数据库-&gt;更新索引，应用代码就可以进行全文索引(ES)查询。另外，对于异步任务可以交予消息队列(kafka)慢慢处理。</p>
+<p>对于大多应用系统应考虑三个问题：可靠性(Reliability),可扩展性(Scalability),可维护性(Maintainability)。</p>
+<h3 id="可靠性："><a href="#可靠性：" class="headerlink" title="可靠性："></a>可靠性：</h3><ul>
+<li><p>硬件故障<br>硬件冗余：磁盘RAID, 服务器双电源，热插拔CPU</p>
+</li>
+<li><p>软件错误<br>特定值（闰秒）导致应用程序挂起，级联故障</p>
+</li>
+<li><p>人为失误<br>抽象层，API以及管理界面。测试边界条件（property based testing)，自动化测试。滚动发布新代码，快速恢复机制。监控性能指标和错误率。</p>
+</li>
+</ul>
+<h3 id="可扩展性"><a href="#可扩展性" class="headerlink" title="可扩展性"></a>可扩展性</h3><blockquote>
+<p>twitter案例：<br>问题：当一个人tweet后，当follower查看自己的timeline时，需要联表查询，效率很低：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> tweets.*, users.* <span class="keyword">FROM</span> tweets</span><br><span class="line">    <span class="keyword">JOIN</span> <span class="keyword">users</span> <span class="keyword">ON</span> tweets.sender_id = users.id</span><br><span class="line">    <span class="keyword">JOIN</span> <span class="keyword">follows</span> <span class="keyword">ON</span> follows.followee_id =users.id</span><br><span class="line">    <span class="keyword">WHERE</span> follows.follower_id = <span class="keyword">current_user</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>可以改进的一点是当一个人tweet时就fan-out到所有follower的timeline。虽然牺牲了这个人发布tweet的时间，但是所有follower查看timeline的速度都提升了。</p>
+<p>当然如果这个人有很多的follower，就会导致发布时间太长，也不行，所以要混着用。</p>
+<p>另外在批处理系统Hadoop中，throughput吞吐量（<strong>每秒可处理的记录条数，或者在某指定数据集上运行作业所需的总时间</strong>）很重要，而在线系统更关注响应时间。响应时间使用平均值并不好，因为可能出现极端值（上下文切换、进程调度、网络丢包、TCP重传、垃圾回收暂停、缺页中断、磁盘I/O），所以可以使用百分数（percentiles)，中位数。amazon使用99.9百分位数作为响应时间的标准，即1000个请求中有一个无需到达最小响应时间。</p>
+<p>如何应对负载增加？垂直扩展vertical scaling（机器升级），水平扩展（负载分布到多个小机器）。有些系统具有弹性，可以自动检测负载增加然后分配更多计算资源。水平扩展会大大提升复杂性。</p>
+<h3 id="可维护性"><a href="#可维护性" class="headerlink" title="可维护性"></a>可维护性</h3><p>监控、自动化、标准工具集成（jenkins,Teamcity,K8s,JIRA,GitHub Action)</p>
+<p>敏捷开发，TDD， 重构</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/04/13/ubiquitous-computing-普适计算综述/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Csh">
+      <meta itemprop="description" content="TEST">
+      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spycsh">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/blog/2021/04/13/ubiquitous-computing-普适计算综述/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">ubiquitous computing and IoT 普适计算与IoT</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-04-13 16:59:34" itemprop="dateCreated datePublished" datetime="2021-04-13T16:59:34+02:00">2021-04-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-06-02 22:05:30" itemprop="dateModified" datetime="2021-06-02T22:05:30+02:00">2021-06-02</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="ubiquitous-computing-amp-IoT"><a href="#ubiquitous-computing-amp-IoT" class="headerlink" title="ubiquitous computing &amp; IoT"></a>ubiquitous computing &amp; IoT</h1>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/blog/2021/04/13/ubiquitous-computing-普适计算综述/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/04/02/分布式系统原理/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -591,7 +916,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-04-04 21:41:59" itemprop="dateModified" datetime="2021-04-04T21:41:59+02:00">2021-04-04</time>
+                <time title="修改时间：2021-04-04 22:43:43" itemprop="dateModified" datetime="2021-04-04T22:43:43+02:00">2021-04-04</time>
               
             
           </span>
@@ -1634,330 +1959,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2020/08/03/computer-network/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Csh">
-      <meta itemprop="description" content="TEST">
-      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spycsh">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/blog/2020/08/03/computer-network/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">computer network</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          
-
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-08-03 22:41:03" itemprop="dateCreated datePublished" datetime="2020-08-03T22:41:03+02:00">2020-08-03</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2021-01-29 13:19:02" itemprop="dateModified" datetime="2021-01-29T13:19:02+01:00">2021-01-29</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="计算机网络知识点"><a href="#计算机网络知识点" class="headerlink" title="计算机网络知识点"></a>计算机网络知识点</h1>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/blog/2020/08/03/computer-network/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2020/07/21/go基础/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Csh">
-      <meta itemprop="description" content="TEST">
-      <meta itemprop="image" content="/blog/images/Haruhi.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spycsh">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/blog/2020/07/21/go基础/" class="post-title-link" itemprop="https://spycsh.github.io/blog/index.html">go基础</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          
-
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-07-21 22:39:45" itemprop="dateCreated datePublished" datetime="2020-07-21T22:39:45+02:00">2020-07-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2021-01-24 01:02:04" itemprop="dateModified" datetime="2021-01-24T01:02:04+01:00">2021-01-24</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="go-programming-基础"><a href="#go-programming-基础" class="headerlink" title="go programming 基础"></a>go programming 基础</h1>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/blog/2020/07/21/go基础/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2007,7 +2008,7 @@
                 
                   <a href="/blog/archives">
                 
-                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-count">29</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2061,7 +2062,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
