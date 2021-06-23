@@ -123,25 +123,25 @@
 
 
 
-  <meta name="description" content="一般涉及到的是binary classification的AUC计算,这里给出的计算方法即可用于binary也可用于多分类问题。">
-<meta name="keywords" content="Machine Learning">
+  <meta name="description" content="RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计">
+<meta name="keywords" content="TEST">
 <meta property="og:type" content="article">
-<meta property="og:title" content="多分类AUC计算">
-<meta property="og:url" content="https://spycsh.github.io/blog/2020/11/07/多分类AUC计算/index.html">
+<meta property="og:title" content="RunSpec——一个跑步app设计">
+<meta property="og:url" content="https://spycsh.github.io/blog/2021/06/23/RunSpec——一个跑步app设计/index.html">
 <meta property="og:site_name" content="Spycsh">
-<meta property="og:description" content="一般涉及到的是binary classification的AUC计算,这里给出的计算方法即可用于binary也可用于多分类问题。">
+<meta property="og:description" content="RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-01-24T00:03:46.197Z">
+<meta property="og:updated_time" content="2021-06-23T22:35:34.566Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="多分类AUC计算">
-<meta name="twitter:description" content="一般涉及到的是binary classification的AUC计算,这里给出的计算方法即可用于binary也可用于多分类问题。">
+<meta name="twitter:title" content="RunSpec——一个跑步app设计">
+<meta name="twitter:description" content="RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计">
 
 
 
 
 
 
-  <link rel="canonical" href="https://spycsh.github.io/blog/2020/11/07/多分类AUC计算/">
+  <link rel="canonical" href="https://spycsh.github.io/blog/2021/06/23/RunSpec——一个跑步app设计/">
 
 
 
@@ -151,7 +151,7 @@
   };
 </script>
 
-  <title>多分类AUC计算 | Spycsh</title>
+  <title>RunSpec——一个跑步app设计 | Spycsh</title>
   
 
 
@@ -365,7 +365,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2020/11/07/多分类AUC计算/">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/06/23/RunSpec——一个跑步app设计/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Csh">
@@ -382,7 +382,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">多分类AUC计算
+          <h1 class="post-title" itemprop="name headline">RunSpec——一个跑步app设计
 
               
             
@@ -410,7 +410,7 @@
                 
               
 
-              <time title="创建时间：2020-11-07 20:42:59" itemprop="dateCreated datePublished" datetime="2020-11-07T20:42:59+01:00">2020-11-07</time>
+              <time title="创建时间：2021-06-23 22:11:32" itemprop="dateCreated datePublished" datetime="2021-06-23T22:11:32+02:00">2021-06-23</time>
             
 
             
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-01-24 01:03:46" itemprop="dateModified" datetime="2021-01-24T01:03:46+01:00">2021-01-24</time>
+                <time title="修改时间：2021-06-24 00:35:34" itemprop="dateModified" datetime="2021-06-24T00:35:34+02:00">2021-06-24</time>
               
             
           </span>
@@ -460,64 +460,14 @@
       
 
       
-        <p>一般涉及到的是binary classification的AUC计算,这里给出的计算方法即可用于binary也可用于多分类问题。</p>
-<a id="more"></a>
-<p>input: 给定的dataframe, 实际预测的correctlabels<br>output: AUC 面积</p>
-<p>举个例子，给定的dataframe是</p>
-<table>
-<thead>
-<tr>
-<th>d</th>
-<th>A</th>
-<th>B</th>
-<th>C</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>0.50</td>
-<td>0.50</td>
-<td>0.00</td>
-</tr>
-<tr>
-<td>1</td>
-<td>0.50</td>
-<td>0.25</td>
-<td>0.25</td>
-</tr>
-<tr>
-<td>2</td>
-<td>0.50</td>
-<td>0.25</td>
-<td>0.25</td>
-</tr>
-<tr>
-<td>3</td>
-<td>0.25</td>
-<td>0.50</td>
-<td>0.25</td>
-</tr>
-<tr>
-<td>4</td>
-<td>0.25</td>
-<td>0.25</td>
-<td>0.50</td>
-</tr>
-</tbody>
-</table>
-<p>A,B,C代表三个类，其中的数字代表着预测该类的概率  </p>
-<p>而corrrectlabels也即实际预测的结果是[“B”,”A”,”B”,”B”,”C”]<br>这两者作为input可以计算output的AUC面积</p>
-<p>以下是求面积的代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_pos_neg_instance_scores</span><span class="params">(prediction_column, correct_labels, column_name)</span>:</span></span><br><span class="line">    prediction_column_array = np.array(prediction_column)</span><br><span class="line">    binary_AUC = [column_name == i <span class="keyword">for</span> i <span class="keyword">in</span> correct_labels] </span><br><span class="line">    print(<span class="string">'binary_AUC='</span>, binary_AUC)</span><br><span class="line">    <span class="comment"># positive_instance_scores =&gt; Col-Name (predicted class) matches with the correct class</span></span><br><span class="line">    positive_instance_scores = prediction_column_array[binary_AUC]</span><br><span class="line">    <span class="comment"># negative_instance_scores =&gt; Col-Name (predicted class) DOES NOT match with the correct class</span></span><br><span class="line">    negative_instance_scores = prediction_column_array[~np.array(binary_AUC)]</span><br><span class="line">    print(positive_instance_scores)</span><br><span class="line">    print(negative_instance_scores)</span><br><span class="line">    <span class="keyword">return</span> positive_instance_scores, negative_instance_scores</span><br><span class="line"></span><br><span class="line"><span class="comment"># fpr=False_Positive_Rate</span></span><br><span class="line"><span class="comment"># tpr=True_Positive_Rate</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_tpr_fpr</span><span class="params">(prediction_column, correct_labels, column_name)</span>:</span></span><br><span class="line">    positive_instance_scores, negative_instance_scores = find_pos_neg_instance_scores(prediction_column, correct_labels, column_name)</span><br><span class="line"><span class="comment">#     print(positive_instance_scores)</span></span><br><span class="line"><span class="comment">#     print(negative_instance_scores)</span></span><br><span class="line">    scores_extended = [<span class="number">0</span>]</span><br><span class="line">    scores_extended += sorted(prediction_column)</span><br><span class="line">    scores_extended += [<span class="number">1</span>]</span><br><span class="line">    print(<span class="string">'scores_extended='</span>,scores_extended)</span><br><span class="line">    dict_tpr_fpr = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> predicted_score <span class="keyword">in</span> scores_extended:</span><br><span class="line">        <span class="keyword">if</span>(len(negative_instance_scores)==<span class="number">0</span>):</span><br><span class="line">            count_false_pos_instances = <span class="number">0</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            count_false_pos_instances = np.sum(negative_instance_scores &gt;= predicted_score)/len(negative_instance_scores)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(len(positive_instance_scores)==<span class="number">0</span>):</span><br><span class="line">            count_true_pos_instances = <span class="number">0</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            count_true_pos_instances = np.sum(positive_instance_scores &gt;= predicted_score)/len(positive_instance_scores)</span><br><span class="line">            </span><br><span class="line">        <span class="comment">#dict_tpr_fpr[predicted_score] = [count_false_pos_instances, count_true_pos_instances]</span></span><br><span class="line">        dict_tpr_fpr[predicted_score] = [count_true_pos_instances, count_false_pos_instances]</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">'dict_tpr_fpr='</span>,dict_tpr_fpr)</span><br><span class="line">    list_reversed_tpr_fpr = [i <span class="keyword">for</span> i <span class="keyword">in</span> reversed(list(dict_tpr_fpr.values()))]</span><br><span class="line">    print(<span class="string">'list_reversed_tpr_fpr='</span>, list_reversed_tpr_fpr)</span><br><span class="line">    <span class="keyword">return</span> list_reversed_tpr_fpr</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculate_AUC</span><span class="params">(list_reversed_tpr_fpr)</span>:</span></span><br><span class="line">    <span class="comment"># AUC = Area under ROC curve</span></span><br><span class="line">    AUC = <span class="number">0</span></span><br><span class="line">    n_tpr_fpr = len(list_reversed_tpr_fpr)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n_tpr_fpr - <span class="number">1</span>):        </span><br><span class="line">        <span class="keyword">if</span>(list_reversed_tpr_fpr[i][<span class="number">1</span>] != list_reversed_tpr_fpr[i + <span class="number">1</span>][<span class="number">1</span>]):</span><br><span class="line">            <span class="comment"># if fpr is changing but tpr is not changing then the area is a square=a*b=(tpr[i+1]-0)*(fpr[i+1]-fpr[i])</span></span><br><span class="line">            <span class="keyword">if</span>(list_reversed_tpr_fpr[i][<span class="number">0</span>] == list_reversed_tpr_fpr[i + <span class="number">1</span>][<span class="number">0</span>]):</span><br><span class="line">                AUC += list_reversed_tpr_fpr[i + <span class="number">1</span>][<span class="number">0</span>]*(list_reversed_tpr_fpr[i + <span class="number">1</span>][<span class="number">1</span>] - list_reversed_tpr_fpr[i][<span class="number">1</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># if both are changing then the area is a trapezoid=(a+b)*h/2=(tpr[i]+tpr[i+1])*(fpr[i+1]-fpr[i])/2</span></span><br><span class="line">                AUC += (list_reversed_tpr_fpr[i + <span class="number">1</span>][<span class="number">0</span>] + list_reversed_tpr_fpr[i][<span class="number">0</span>])*(list_reversed_tpr_fpr[i + <span class="number">1</span>][<span class="number">1</span>] - list_reversed_tpr_fpr[i][<span class="number">1</span>])/<span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> AUC</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">auc</span><span class="params">(df, correctlabels)</span>:</span></span><br><span class="line">    AUC = <span class="number">0</span></span><br><span class="line">    class_frequency = dict()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> correctlabels:</span><br><span class="line">        <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> class_frequency:</span><br><span class="line">            class_frequency[i] = (<span class="number">1</span>/len(correctlabels))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            class_frequency[i] += (<span class="number">1</span>/len(correctlabels))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> df.columns:</span><br><span class="line">        prediction_vector = df[col]</span><br><span class="line">        list_reversed_tpr_fpr = get_tpr_fpr(prediction_vector, correctlabels, col)</span><br><span class="line">        area_col = calculate_AUC(list_reversed_tpr_fpr)</span><br><span class="line">        AUC += class_frequency[col] * area_col</span><br><span class="line">    <span class="keyword">return</span> AUC</span><br></pre></td></tr></table></figure>
-<p>测试代码:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">predictions = pd.DataFrame(&#123;<span class="string">"A"</span>:[<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.25</span>,<span class="number">0.25</span>],<span class="string">"B"</span>:[<span class="number">0.5</span>,<span class="number">0.25</span>,<span class="number">0.25</span>,<span class="number">0.5</span>,<span class="number">0.25</span>],<span class="string">"C"</span>:[<span class="number">0.0</span>,<span class="number">0.25</span>,<span class="number">0.25</span>,<span class="number">0.25</span>,<span class="number">0.5</span>]&#125;)</span><br><span class="line"></span><br><span class="line">correctlabels = [<span class="string">"B"</span>,<span class="string">"A"</span>,<span class="string">"B"</span>,<span class="string">"B"</span>,<span class="string">"C"</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">"AUC: &#123;&#125;"</span>.format(auc(predictions,correctlabels)))</span><br></pre></td></tr></table></figure></p>
-<p>步骤说明：<br>第一步即调用auc方法计算class_frequency，即利用frequency作为<strong>权重</strong>将所有类的AUC相加。(Calculate the weighted AUC by summing the individual AUCs weighted by the relative<br>frequency of each class (as estimated from the correct labels)  </p>
-<p>接下来就是计算每个类的AUC了,实际上是每个类的binary AUC, 也即对于这个类的FPR和TPR点所围面积的和 <a href="https://zh.wikipedia.org/wiki/ROC%E6%9B%B2%E7%BA%BF" target="_blank" rel="noopener">概念链接</a>。 </p>
-<p>因此，首先我们必须计算TPR和FPR点的坐标，也就是<code>get_tpr_fpr</code>函数，先找到其中判断对positive与错negative的scores（<code>find_pos_neg_instance_scores</code>函数），再对prediction_column（这里需要在首尾加一个0和一个1，好帮助后面的面积计算）中的每个prediction_score，判断它和判断negative 或positive instance的score的关系。得到count_false_pos_instances和count_true_pos_instances的两句实际上就是FPR（在所有实际为阴性的样本中，被错误地判断为阳性之比率FPR=FP/(FP+TN)）和TPR（在所有实际为阴性的样本中，被错误地判断为阳性之比率TPR=TP/(TP+FN)）的计算过程。 </p>
-<p>这一步之后再进行个从小到大的排序，其实就得到了所有的score对应的TPR和FPR pair 也即点坐标，只要画出点坐标连接后下方在坐标轴上的面积（以TPR为纵轴，FPR为横轴），就可以得到AUC的面积了。而这一步则用<code>calculate_AUC</code>函数自动计算得到。</p>
-<p>得到了每一个类的AUC，再做一个weight sum就是最后的多分类AUC面积。</p>
-<p>更简单的多分类方法（概率方法）：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">auc</span><span class="params">(df,correctlabels)</span>:</span></span><br><span class="line">    new_df=df.copy()</span><br><span class="line">    lens=len(correctlabels)</span><br><span class="line">    cols=new_df.columns.tolist()</span><br><span class="line">    <span class="keyword">if</span> len(cols)&lt;<span class="number">3</span>: <span class="comment">#binary ;only Pos and Neg</span></span><br><span class="line">        pos=[ i <span class="keyword">for</span> i <span class="keyword">in</span> range(lens)  <span class="keyword">if</span> correctlabels[i]==cols[<span class="number">0</span>]]</span><br><span class="line">        neg=[i <span class="keyword">for</span> i <span class="keyword">in</span> range(lens)  <span class="keyword">if</span> correctlabels[i]!=cols[<span class="number">0</span>]]                    </span><br><span class="line">        print(pos,neg)</span><br><span class="line">        one=new_df[cols[<span class="number">0</span>]]</span><br><span class="line">        auc = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> pos:</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> neg:</span><br><span class="line">                <span class="keyword">if</span> one[i] &gt; one[j]:</span><br><span class="line">                    auc += <span class="number">1</span></span><br><span class="line">                <span class="keyword">elif</span> one[i] == one[j]:</span><br><span class="line">                    auc += <span class="number">0.5</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> auc / (len(pos)*len(neg))</span><br><span class="line">    <span class="keyword">else</span>:      <span class="comment"># CLASS &gt;=3   Pos / non-Pos</span></span><br><span class="line">        aucs=[]</span><br><span class="line">        <span class="keyword">for</span> col <span class="keyword">in</span> cols:</span><br><span class="line">            pos=[ i <span class="keyword">for</span> i <span class="keyword">in</span> range(lens)  <span class="keyword">if</span> correctlabels[i]==col]</span><br><span class="line">            nonpos=[i <span class="keyword">for</span> i <span class="keyword">in</span> range(lens)  <span class="keyword">if</span> correctlabels[i]!=col]                      </span><br><span class="line">            print(pos,nonpos)</span><br><span class="line">            one=new_df[col]</span><br><span class="line">            auc = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> pos:</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> nonpos:</span><br><span class="line">                    <span class="keyword">if</span> one[i] &gt; one[j]:</span><br><span class="line">                        auc += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">elif</span> one[i] == one[j]:</span><br><span class="line">                        auc += <span class="number">0.5</span></span><br><span class="line">            auc=auc/(len(pos)*len(nonpos))</span><br><span class="line">            aucs.append(auc)</span><br><span class="line">        weights=[correctlabels.count(col)/len(correctlabels) <span class="keyword">for</span> col <span class="keyword">in</span> cols ]</span><br><span class="line">        print(weights)</span><br><span class="line">        print(aucs)</span><br><span class="line"></span><br><span class="line">        weights=np.array(weights)</span><br><span class="line">        aucs=np.array(aucs)</span><br><span class="line">        avg_auc=np.sum(aucs*weights)</span><br><span class="line">        <span class="keyword">return</span> avg_auc</span><br><span class="line"></span><br><span class="line"><span class="comment"># test</span></span><br><span class="line">predictions = pd.DataFrame(&#123;<span class="string">"A"</span>:[<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.25</span>,<span class="number">0.25</span>],<span class="string">"B"</span>:[<span class="number">0.5</span>,<span class="number">0.25</span>,<span class="number">0.25</span>,<span class="number">0.5</span>,<span class="number">0.25</span>],<span class="string">"C"</span>:[<span class="number">0.0</span>,<span class="number">0.25</span>,<span class="number">0.25</span>,<span class="number">0.25</span>,<span class="number">0.5</span>]&#125;)</span><br><span class="line"></span><br><span class="line">correctlabels = [<span class="string">"B"</span>,<span class="string">"A"</span>,<span class="string">"B"</span>,<span class="string">"B"</span>,<span class="string">"C"</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">"AUC: &#123;&#125;"</span>.format(auc(predictions,correctlabels)))</span><br></pre></td></tr></table></figure></p>
-<p>简单的二分类AUC计算<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cal_auc</span><span class="params">(prob, labels)</span>:</span></span><br><span class="line">    f = list(zip(prob, labels))</span><br><span class="line">    rank = [values2 <span class="keyword">for</span> values1, values2 <span class="keyword">in</span> sorted(f, key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>])]</span><br><span class="line">    rankList = [i + <span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(len(rank)) <span class="keyword">if</span> rank[i] == <span class="number">1</span>]</span><br><span class="line">    posNum = <span class="number">0</span></span><br><span class="line">    negNum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(labels)):</span><br><span class="line">        <span class="keyword">if</span> (labels[i] == <span class="number">1</span>):</span><br><span class="line">            posNum += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            negNum += <span class="number">1</span></span><br><span class="line">    auc = (sum(rankList) - (posNum * (posNum + <span class="number">1</span>)) / <span class="number">2</span>) / (posNum * negNum)</span><br><span class="line">    <span class="keyword">return</span> auc</span><br><span class="line"></span><br><span class="line"><span class="comment"># test</span></span><br><span class="line">model = BernoulliNB()</span><br><span class="line">model.fit(x_train, y_train)</span><br><span class="line">prediction = model.predict_proba(x_val)</span><br><span class="line">auc = cal_auc(prediction[:, <span class="number">1</span>], np.array(y_val))</span><br></pre></td></tr></table></figure></p>
+        <h1 id="RunSpec——一个基于Kotlin前端，Kafka-Spark-MongoDB后台的跑步app设计"><a href="#RunSpec——一个基于Kotlin前端，Kafka-Spark-MongoDB后台的跑步app设计" class="headerlink" title="RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计"></a>RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计</h1><a id="more"></a>
+<p><a href="https://github.com/Spycsh/RunSpec" target="_blank" rel="noopener">点击项目地址</a></p>
+<p>本文主要记录了一个跑步app的设计过程，该<a href="https://github.com/Spycsh/RunSpec" target="_blank" rel="noopener">项目</a>是一个课余项目，主要是我为了加深对分布式应用架构的理解而写的。项目主体用Kotlin写前端安卓，前端安卓会读取用户安卓手机传感器中的数据并且传递到后台，后台的Kafka作跑步者数据的消息队列用以解耦与缓冲，再以Spark用以数据分析和存储到MongoDB中。由于笔者水平和时间有限，部分功能还在学习实践探索中。以下将对各个模块进行介绍。</p>
+<h2 id="adviser-根据OpenWeather-API的跑步建议的模块"><a href="#adviser-根据OpenWeather-API的跑步建议的模块" class="headerlink" title="adviser - 根据OpenWeather API的跑步建议的模块"></a>adviser - 根据OpenWeather API的跑步建议的模块</h2><p>该模块是是一个极简的springboot项目，主要功能是根据当前经纬度调用OpenWeather API找到当前天气并且提供一个API。根据该API得到的天气可以为跑者在开跑前提供一些建议。</p>
+<h2 id="android-安卓客户端"><a href="#android-安卓客户端" class="headerlink" title="android - 安卓客户端"></a>android - 安卓客户端</h2><p>Kotlinn客户端，主要有三个界面。Home页面显示了用户的经纬度，天气情况，Top 5的跑步点（事先规定的POI，即point of interest，每当有用户经过POI，就会增加热度，对这个热度进行排序）。Dashboard页面展示了步数、举例、时间、经过的地方。Setting页面用来debug。</p>
+<h2 id="producer-接收app数据并且转交给Kafka队列的模块"><a href="#producer-接收app数据并且转交给Kafka队列的模块" class="headerlink" title="producer - 接收app数据并且转交给Kafka队列的模块"></a>producer - 接收app数据并且转交给Kafka队列的模块</h2><p>由于目标是庞大的用户群体产生的实时跑步数据，因此使用Kafka来作解耦与缓冲的中间件，发布这些数据给broker再由processor模块消费。同时利用reslet建立了一些REST API来返回该用户历史跑过的POI，Top5的POI，和用户当前跑过的POI。</p>
+<h2 id="processor-用Spark对实时数据进行分析并存储的模块"><a href="#processor-用Spark对实时数据进行分析并存储的模块" class="headerlink" title="processor - 用Spark对实时数据进行分析并存储的模块"></a>processor - 用Spark对实时数据进行分析并存储的模块</h2><p>订阅了Kafka broker的processor模块将对用户实时的跑步数据进行一个分析和存储。这里使用Spark来进行分布式处理较为妥当。首先Spark对mongoDB有原生操作的的<a href="https://docs.mongodb.com/spark-connector/v1.1/java-api/" target="_blank" rel="noopener">connector</a>，处理起来较为便捷。此处由于缺乏对相关例子的研究，并没有用到这个connector。而是简单地用insertOne逐条存储到MongoDB的runnerData表中。当然，对于预设的POI进行了<a href="https://www.cnblogs.com/qingyunzong/p/8890483.html#_label1_0" target="_blank" rel="noopener">广播</a>，用以在不同的executor上处理数据流时可以由多个task共享一个POI，进行更快速的计算。同时，计算POI和用户经纬度的距离，若小于阈值，再判断是否已有同一用户id，同一tripId经过该点的记录，否则该POI热度加一。将这个count存入数据库表runnerPOIData中。</p>
+<h2 id="statisticsboard-POI跑步数据显示面板"><a href="#statisticsboard-POI跑步数据显示面板" class="headerlink" title="statisticsboard - POI跑步数据显示面板"></a>statisticsboard - POI跑步数据显示面板</h2><p>主要是一个springboot项目。它可以在<code>localhost:8081</code>可视化POI的热度，也可以检测经过POI的用户的记录表。数据每5秒通过stomp websocket推送到面版，再由leaflet.js在页面左边进行渲染可视化。页面右侧是一个表格，记录了trip Id，跑者Id，POI Id，距离与时间。</p>
 
       
     </div>
@@ -551,7 +501,7 @@
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
     
-    <a href="https://spycsh.github.io/blog/2020/11/07/多分类AUC计算/" title="多分类AUC计算">https://spycsh.github.io/blog/2020/11/07/多分类AUC计算/</a>
+    <a href="https://spycsh.github.io/blog/2021/06/23/RunSpec——一个跑步app设计/" title="RunSpec——一个跑步app设计">https://spycsh.github.io/blog/2021/06/23/RunSpec——一个跑步app设计/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
@@ -562,12 +512,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/blog/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
-          
-        </div>
-      
 
       
       
@@ -577,8 +521,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2020/08/03/computer-network/" rel="next" title="computer network">
-                <i class="fa fa-chevron-left"></i> computer network
+              <a href="/blog/2021/06/02/DDAI 数据密集型应用笔记/" rel="next" title="DDAI 数据密集型应用笔记">
+                <i class="fa fa-chevron-left"></i> DDAI 数据密集型应用笔记
               </a>
             
           </div>
@@ -586,10 +530,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/blog/2020/12/16/SVM公式推导和原理解析/" rel="prev" title="SVM公式推导和原理解析">
-                SVM公式推导和原理解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -634,8 +574,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -766,6 +715,22 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RunSpec——一个基于Kotlin前端，Kafka-Spark-MongoDB后台的跑步app设计"><span class="nav-number">1.</span> <span class="nav-text">RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#adviser-根据OpenWeather-API的跑步建议的模块"><span class="nav-number">1.1.</span> <span class="nav-text">adviser - 根据OpenWeather API的跑步建议的模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android-安卓客户端"><span class="nav-number">1.2.</span> <span class="nav-text">android - 安卓客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#producer-接收app数据并且转交给Kafka队列的模块"><span class="nav-number">1.3.</span> <span class="nav-text">producer - 接收app数据并且转交给Kafka队列的模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#processor-用Spark对实时数据进行分析并存储的模块"><span class="nav-number">1.4.</span> <span class="nav-text">processor - 用Spark对实时数据进行分析并存储的模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#statisticsboard-POI跑步数据显示面板"><span class="nav-number">1.5.</span> <span class="nav-text">statisticsboard - POI跑步数据显示面板</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
