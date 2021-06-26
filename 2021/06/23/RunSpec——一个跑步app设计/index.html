@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-23T22:35:34.566Z">
+<meta property="og:updated_time" content="2021-06-26T10:58:44.218Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RunSpec——一个跑步app设计">
 <meta name="twitter:description" content="RunSpec——一个基于Kotlin前端，Kafka+Spark+MongoDB后台的跑步app设计">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-24 00:35:34" itemprop="dateModified" datetime="2021-06-24T00:35:34+02:00">2021-06-24</time>
+                <time title="修改时间：2021-06-26 12:58:44" itemprop="dateModified" datetime="2021-06-26T12:58:44+02:00">2021-06-26</time>
               
             
           </span>
@@ -464,9 +464,9 @@
 <p><a href="https://github.com/Spycsh/RunSpec" target="_blank" rel="noopener">点击项目地址</a></p>
 <p>本文主要记录了一个跑步app的设计过程，该<a href="https://github.com/Spycsh/RunSpec" target="_blank" rel="noopener">项目</a>是一个课余项目，主要是我为了加深对分布式应用架构的理解而写的。项目主体用Kotlin写前端安卓，前端安卓会读取用户安卓手机传感器中的数据并且传递到后台，后台的Kafka作跑步者数据的消息队列用以解耦与缓冲，再以Spark用以数据分析和存储到MongoDB中。由于笔者水平和时间有限，部分功能还在学习实践探索中。以下将对各个模块进行介绍。</p>
 <h2 id="adviser-根据OpenWeather-API的跑步建议的模块"><a href="#adviser-根据OpenWeather-API的跑步建议的模块" class="headerlink" title="adviser - 根据OpenWeather API的跑步建议的模块"></a>adviser - 根据OpenWeather API的跑步建议的模块</h2><p>该模块是是一个极简的springboot项目，主要功能是根据当前经纬度调用OpenWeather API找到当前天气并且提供一个API。根据该API得到的天气可以为跑者在开跑前提供一些建议。</p>
-<h2 id="android-安卓客户端"><a href="#android-安卓客户端" class="headerlink" title="android - 安卓客户端"></a>android - 安卓客户端</h2><p>Kotlinn客户端，主要有三个界面。Home页面显示了用户的经纬度，天气情况，Top 5的跑步点（事先规定的POI，即point of interest，每当有用户经过POI，就会增加热度，对这个热度进行排序）。Dashboard页面展示了步数、举例、时间、经过的地方。Setting页面用来debug。</p>
-<h2 id="producer-接收app数据并且转交给Kafka队列的模块"><a href="#producer-接收app数据并且转交给Kafka队列的模块" class="headerlink" title="producer - 接收app数据并且转交给Kafka队列的模块"></a>producer - 接收app数据并且转交给Kafka队列的模块</h2><p>由于目标是庞大的用户群体产生的实时跑步数据，因此使用Kafka来作解耦与缓冲的中间件，发布这些数据给broker再由processor模块消费。同时利用reslet建立了一些REST API来返回该用户历史跑过的POI，Top5的POI，和用户当前跑过的POI。</p>
-<h2 id="processor-用Spark对实时数据进行分析并存储的模块"><a href="#processor-用Spark对实时数据进行分析并存储的模块" class="headerlink" title="processor - 用Spark对实时数据进行分析并存储的模块"></a>processor - 用Spark对实时数据进行分析并存储的模块</h2><p>订阅了Kafka broker的processor模块将对用户实时的跑步数据进行一个分析和存储。这里使用Spark来进行分布式处理较为妥当。首先Spark对mongoDB有原生操作的的<a href="https://docs.mongodb.com/spark-connector/v1.1/java-api/" target="_blank" rel="noopener">connector</a>，处理起来较为便捷。此处由于缺乏对相关例子的研究，并没有用到这个connector。而是简单地用insertOne逐条存储到MongoDB的runnerData表中。当然，对于预设的POI进行了<a href="https://www.cnblogs.com/qingyunzong/p/8890483.html#_label1_0" target="_blank" rel="noopener">广播</a>，用以在不同的executor上处理数据流时可以由多个task共享一个POI，进行更快速的计算。同时，计算POI和用户经纬度的距离，若小于阈值，再判断是否已有同一用户id，同一tripId经过该点的记录，否则该POI热度加一。将这个count存入数据库表runnerPOIData中。</p>
+<h2 id="android-安卓客户端"><a href="#android-安卓客户端" class="headerlink" title="android - 安卓客户端"></a>android - 安卓客户端</h2><p>Kotlin客户端，主要有三个界面。Home页面显示了用户的经纬度，天气情况，Top 5的跑步点（预设的POI，即point of interest，每当有用户经过POI，就会增加热度，对这个热度进行排序，选取前五个）。Dashboard页面展示了步数、跑步距离、跑步用时、经过的地方。Setting页面用来debug。</p>
+<h2 id="producer-接收app数据并且转交给Kafka队列的模块"><a href="#producer-接收app数据并且转交给Kafka队列的模块" class="headerlink" title="producer - 接收app数据并且转交给Kafka队列的模块"></a>producer - 接收app数据并且转交给Kafka队列的模块</h2><p>由于目标是庞大的用户群体产生的实时跑步数据，因此使用Kafka来作解耦与缓冲的中间件。前端采集到数据后，发布这些数据给producer模块的Kafka broker再由processor模块消费。同时producer模块利用reslet建立了一些REST API来返回该用户历史跑过的POI，Top5的POI，和用户当前跑过的POI。</p>
+<h2 id="processor-用Spark对实时数据进行分析并存储的模块"><a href="#processor-用Spark对实时数据进行分析并存储的模块" class="headerlink" title="processor - 用Spark对实时数据进行分析并存储的模块"></a>processor - 用Spark对实时数据进行分析并存储的模块</h2><p>订阅了Kafka broker的processor模块将对用户实时的跑步数据进行一个分析和存储。这里使用Spark来进行分布式处理较为妥当。首先Spark对mongoDB有原生操作的的<a href="https://docs.mongodb.com/spark-connector/v1.1/java-api/" target="_blank" rel="noopener">connector</a>，处理起来较为便捷。此处由于缺乏对相关例子的研究，并没有用到这个connector。而是简单地用insertOne逐条存储到MongoDB的runnerData表中。当然，对于预设的POI进行了<a href="https://spark.apache.org/docs/1.6.1/api/java/org/apache/spark/broadcast/Broadcast.html" target="_blank" rel="noopener">广播</a>，用以在不同的executor上处理数据流时可以由多个task共享一个POI，进行更快速的计算。同时，计算POI和用户经纬度的距离，若小于阈值，再判断是否已有同一用户id，同一tripId经过该点的记录，否则该POI热度加一。将这个count存入数据库表runnerPOIData中。</p>
 <h2 id="statisticsboard-POI跑步数据显示面板"><a href="#statisticsboard-POI跑步数据显示面板" class="headerlink" title="statisticsboard - POI跑步数据显示面板"></a>statisticsboard - POI跑步数据显示面板</h2><p>主要是一个springboot项目。它可以在<code>localhost:8081</code>可视化POI的热度，也可以检测经过POI的用户的记录表。数据每5秒通过stomp websocket推送到面版，再由leaflet.js在页面左边进行渲染可视化。页面右侧是一个表格，记录了trip Id，跑者Id，POI Id，距离与时间。</p>
 
       
