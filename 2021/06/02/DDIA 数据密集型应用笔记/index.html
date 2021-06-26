@@ -126,14 +126,14 @@
   <meta name="description" content="Design Data-intensive applications  笔记">
 <meta name="keywords" content="Distributed System">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DDAI 数据密集型应用笔记">
-<meta property="og:url" content="https://spycsh.github.io/blog/2021/06/02/DDAI 数据密集型应用笔记/index.html">
+<meta property="og:title" content="DDIA 数据密集型应用笔记">
+<meta property="og:url" content="https://spycsh.github.io/blog/2021/06/02/DDIA 数据密集型应用笔记/index.html">
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications  笔记">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-21T22:18:00.926Z">
+<meta property="og:updated_time" content="2021-06-26T21:40:36.735Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="DDAI 数据密集型应用笔记">
+<meta name="twitter:title" content="DDIA 数据密集型应用笔记">
 <meta name="twitter:description" content="Design Data-intensive applications  笔记">
 
 
@@ -141,7 +141,7 @@
 
 
 
-  <link rel="canonical" href="https://spycsh.github.io/blog/2021/06/02/DDAI 数据密集型应用笔记/">
+  <link rel="canonical" href="https://spycsh.github.io/blog/2021/06/02/DDIA 数据密集型应用笔记/">
 
 
 
@@ -151,7 +151,7 @@
   };
 </script>
 
-  <title>DDAI 数据密集型应用笔记 | Spycsh</title>
+  <title>DDIA 数据密集型应用笔记 | Spycsh</title>
   
 
 
@@ -365,7 +365,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/06/02/DDAI 数据密集型应用笔记/">
+    <link itemprop="mainEntityOfPage" href="https://spycsh.github.io/blog/blog/2021/06/02/DDIA 数据密集型应用笔记/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Csh">
@@ -382,7 +382,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">DDAI 数据密集型应用笔记
+          <h1 class="post-title" itemprop="name headline">DDIA 数据密集型应用笔记
 
               
             
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-22 00:18:00" itemprop="dateModified" datetime="2021-06-22T00:18:00+02:00">2021-06-22</time>
+                <time title="修改时间：2021-06-26 23:40:36" itemprop="dateModified" datetime="2021-06-26T23:40:36+02:00">2021-06-26</time>
               
             
           </span>
@@ -481,7 +481,8 @@
 <p>如何应对负载增加？垂直扩展vertical scaling（机器升级），水平扩展（负载分布到多个小机器）。有些系统具有弹性，可以自动检测负载增加然后分配更多计算资源。水平扩展会大大提升复杂性。</p>
 <h3 id="可维护性"><a href="#可维护性" class="headerlink" title="可维护性"></a>可维护性</h3><p>监控、自动化、标准工具集成（jenkins,Teamcity,K8s,JIRA,GitHub Action)</p>
 <p>敏捷开发，TDD， 重构</p>
-<h2 id="数据模型与查询语言"><a href="#数据模型与查询语言" class="headerlink" title="数据模型与查询语言"></a>数据模型与查询语言</h2><h3 id="关系模型"><a href="#关系模型" class="headerlink" title="关系模型"></a>关系模型</h3><p>最知名的数据模型SQL，基于1970年提出的关系模型。数据被组织成关系，在SQL中称为表(table)，其中每个关系都是元组（tuples）的无序集合（SQL中的行）。</p>
+<h2 id="数据模型与查询语言"><a href="#数据模型与查询语言" class="headerlink" title="数据模型与查询语言"></a>数据模型与查询语言</h2><p>三种数据模型：关系模型、文档模型、图模型。</p>
+<h3 id="关系模型"><a href="#关系模型" class="headerlink" title="关系模型"></a>关系模型</h3><p>最知名的数据模型SQL，基于1970年提出的关系模型。数据被组织成关系，在SQL中称为表(table)，其中每个关系都是元组（tuples）的无序集合（SQL中的行）。</p>
 <blockquote>
 <p>第一范式（1NF）强调的是列的原子性，表示列不能够分成其它几列。举例：联系人建表，电话要分成家庭电话和个人电话。第二范式（2NF），表必须有一个主键；二是没有包含在主键中的列必须完全依赖于主键，而不能只依赖于主键的一部分，不符合 2NF 的设计容易产生冗余数据。举例【OrderDetail】（OrderID，ProductID，UnitPrice，Discount，Quantity，ProductName）= 【OrderDetail】（OrderID，ProductID，Discount，Quantity）+ Product】（ProductID，UnitPrice，ProductName）。第三范式（3NF），任何非主属性不依赖于其它非主属性。【Order】（OrderID，OrderDate，CustomerID，CustomerName，CustomerAddr，CustomerCity）主键是（OrderID），符合第二范式，但Custom也依赖于CustomID。应拆分出来<br>参考：<br><a href="https://blog.csdn.net/Dream_angel_Z/article/details/45175621" target="_blank" rel="noopener">https://blog.csdn.net/Dream_angel_Z/article/details/45175621</a></p>
 </blockquote>
@@ -521,7 +522,50 @@
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> vertices (</span><br><span class="line">    vertex_id   <span class="built_in">integer</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">    properties  <span class="keyword">json</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> edges (</span><br><span class="line">    edge_id     <span class="built_in">integer</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">    tail_vertex <span class="built_in">integer</span> <span class="keyword">REFERENCES</span> vertices (vertex_id),</span><br><span class="line">    head_vertex <span class="built_in">integer</span> <span class="keyword">REFERENCES</span> vertices (vertex_id),</span><br><span class="line">    label       <span class="built_in">text</span>,</span><br><span class="line">    properties  <span class="keyword">json</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> edges_tails <span class="keyword">ON</span> edges (tail_vertex);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> edges_heads <span class="keyword">ON</span> edges (head_vertex);</span><br></pre></td></tr></table></figure>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;字段名A&gt; REFERENCES &lt;表名T&gt; &lt;字段名B&gt; -- 表示字段A存在，T表中必须存在相同的值字段B</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> &lt;索引名&gt; <span class="keyword">ON</span> edges (tail_vertex); <span class="comment">-- 建立索引</span></span><br></pre></td></tr></table></figure>
-<h2 id="数据存储与检索"><a href="#数据存储与检索" class="headerlink" title="数据存储与检索"></a>数据存储与检索</h2><p>两个存储引擎家族：日志结构的存储引擎和面向页的存储引擎(B-Tree)。</p>
+<h2 id="数据存储与检索"><a href="#数据存储与检索" class="headerlink" title="数据存储与检索"></a>数据存储与检索</h2><p>总体来说存储引擎分为两大类，OLTP（针对事务处理）的架构和OLAP（针对分析型）。OLTP系统面向最终用户，可能收到大量请求。为了处理负载，应用程序在每个查询中只涉及少量记录。应用程序基于某种键来请求记录，而存储引擎使用索引来查找所请求键的数据，<strong>磁盘寻道</strong>时间是瓶颈。OLAP又业务分析师使用，处理的查询请求数目远低于OLTP系统，但每条查询需要在短时间扫描数百万记录。<strong>磁盘带宽</strong>（而不是寻道时间）是瓶颈，面向列的存储对于这种工作负载比较流行。</p>
+<ul>
+<li><p>磁盘寻道时间：是指将读写磁头移动至正确的磁道上所需要的时间。寻道时间越短，I/O操作越快，目前磁盘的平均寻道时间一般在3-15ms。<a href="https://tech.meituan.com/2017/05/19/about-desk-io.html" target="_blank" rel="noopener">来源</a></p>
+</li>
+<li><p>磁盘带宽：正相关影响吞吐量（单位时间可以成功传输的数据数量）。</p>
+</li>
+</ul>
+<p>OLTP方面，有两个主要流派的存储引擎家族：日志结构的存储引擎（BitCask, SSTables, LSM-tree, LevelDB, Cassandra, HBase, Lucene）和面向页的存储引擎(B Tree，用于MongoDB, B+树用于MySQL)。</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>一个简易的database，实现了get和set：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="function"><span class="title">db_set</span></span>()&#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"<span class="variable">$1</span>, <span class="variable">$2</span>"</span> &gt;&gt; database</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">db_get</span></span>()&#123;</span><br><span class="line">    grep <span class="string">"^<span class="variable">$1</span>,"</span> database | sed -e <span class="string">"s/^<span class="variable">$1</span>,//"</span> | tail -n 1 </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：日志文件存储Key-Value存储对需要从头到尾扫描整个数据库文件来查找键的出现位置。</p>
+<p>因此，加速读查询，索引是必要的。但是并不是索引越多越好，因为每个索引都会减慢写速度。</p>
+<h4 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h4><blockquote>
+<p>哈希索引基于哈希表。哈希表是一种查找算法，希望能尽量做到不经过任何比较，通过一次存取就能得到所查找的数据元素。因而必须要有一个确定的映射：数据的关键字key&lt;=&gt;数据元素位置。这种映射关系称为散列函数h(key)。最普通的散列函数：除留余数法h(key) = key MOD p, p&lt;=m。哈希冲突（不同key经由哈希函数生成的值相同）通常用<a href="https://cloud.tencent.com/developer/article/1454891" target="_blank" rel="noopener">拉链法</a>解决。</p>
+</blockquote>
+<p>为何不直接用哈希表来直接索引数据？哈希表存储了映射：键&lt;=&gt;数据文件的字节偏移量。查找某个key时，使用hash map找到文件中的偏移量，即存储位置，再读取其value。这就是Bitcask的做法。</p>
+<p>Bitcask适合<strong>键的值频繁更新</strong>的场景。例如key是某个视频的url，value是播放的次数。有很多写操作，但没有很多key，也就是需要<strong>所有key都能保存在内存</strong>中。注意，这里key-value是追加式（日志的机制），那么怎样才能避免用尽磁盘空间呢？就是把具有相同key的记录<strong>压缩</strong>，只保留每个键最近的更新。这种实现方式是将日志分解成一定大小的段，当文件达到一定大小就关闭它并后续写入到新的段文件中。多个段也可以合并压缩，合并过程中，写请求还是在旧段上，但是合并后，写请求切换到新的合并后的段。每个段都有自己的内存哈希表，为了找到键的值，从最新的段开始依次检查。</p>
+<p>追加式的日志看起来浪费空间，为什么不原地更新？</p>
+<ul>
+<li>追加和分段合并是“顺序写”，比随机写入快很多。</li>
+<li>不必担心重写时发生崩溃。</li>
+<li>避免碎片化问题</li>
+</ul>
+<p>坏处：<strong>哈希表必须全部放入内存</strong>，有大量键就gg，（注意value很占空间没有问题，因为哈希表只是key&lt;=&gt;存储位置）。很难在磁盘上维护哈希表。<strong>区间查询效率不高</strong>，只能逐个查找每个键。</p>
+<h4 id="SSTables和LSM-Tree"><a href="#SSTables和LSM-Tree" class="headerlink" title="SSTables和LSM-Tree"></a>SSTables和LSM-Tree</h4><p>SSTable（Sorted String Table)在每个存储段都是一组key-value序列的日志结构的基础上，要求kv对的顺序按键<strong>排序</strong>。利用B树可以在磁盘上维护排序结构，而利用红黑树或AVL树可以在内存中排序。</p>
+<p>SSTable优点：</p>
+<ul>
+<li>合并段可以并发读取多个输入段文件，比较每个文件第一个键，把最小的键拷贝到输出文件，重复这个过程。如果重复键出现在多个输入段，保留最新段的值，丢弃旧段的值。</li>
+<li>查找特定键时，不再需要在内存中保存所有键的索引。比如查找handwork，知道handbag和handsome就知道要找的offset在中间。</li>
+</ul>
+<p>读写规则：</p>
+<ol>
+<li>写入时，添加到内存中的平衡树数据结构中，这个内存中的树被称为<strong>内存表（memtable）</strong></li>
+<li>内存表大于某个threshold（通常几MB)时，将其作为SSTable<strong>写入磁盘</strong>。由于树已经维护了按键排序的kv，写磁盘比较高效。</li>
+<li>处理读请求，先内存表，再最新磁盘段，再次新磁盘段。</li>
+<li>后台周期性合并压缩</li>
+</ol>
+<p>问题：数据库崩溃，内存表丢失。解决：磁盘上保留日志，每个写入追加到日志，可以乱序，崩溃后恢复内存表。当内存表写入SSTable写入磁盘，相应日志可以丢弃。</p>
+<h4 id="从SSTable到LSM-Tree"><a href="#从SSTable到LSM-Tree" class="headerlink" title="从SSTable到LSM-Tree"></a>从SSTable到LSM-Tree</h4><p>以上算法是LevelDB和RocksDB使用的。类似还被用于Cassandra和HBase，这两个引擎都收到Google Bigtable论文的启发（SSTable和内存表memtable）。</p>
+<p>Log-Structured Merge-Tree。基千合并和压缩排序文件原理的存储引擎通常都被称为LSM存储引擎。</p>
+<p>Lucene是Elasticsearch和Solr等全文搜索系统使用的索引引擎。键是单词，值是保护该单词的文档ID的列表（倒排表）。在Lucene中这个映射保存在类SSTable的排序文件中，这些文件可以根据需要在后台合并。</p>
+<p>优化：查找不存在的键，先SSTable，再最新磁盘段，再次新磁盘段……使用布隆过滤器（不存在某个键，很快告诉你结果）。大小分级（HBase）和分层压缩（levelDB），Cassandra支持这两种压缩。前者让较小较新的SSTables连续合并到旧和较大的SSTables。后者让键的范围分裂成多个更小的SSTables，旧数据被移到单独的“层级”，这样压缩可以逐步进行并节省磁盘空间。</p>
+<p>LSM-tree的基本思想是保存在后台合并的一系列SSTable。数据按排序存储，可区间查询，不用存全部索引，磁盘顺序写入，高吞吐量。</p>
+<h4 id="B-Trees"><a href="#B-Trees" class="headerlink" title="B-Trees"></a>B-Trees</h4><p>B-tree将数据库分解成固定大小的块或页,传统上大小为4 KB。某一页被指定为B-tree的根；每当查找索引中的一个键时， 总是从这里开始。 该页面包含若干个键和对子页的引用。 每个孩子都负责一个连续范围内的键， 相邻引用之间的键可以指示这些范围之间的边界。</p>
 
       
     </div>
@@ -555,7 +599,7 @@
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
     
-    <a href="https://spycsh.github.io/blog/2021/06/02/DDAI 数据密集型应用笔记/" title="DDAI 数据密集型应用笔记">https://spycsh.github.io/blog/2021/06/02/DDAI 数据密集型应用笔记/</a>
+    <a href="https://spycsh.github.io/blog/2021/06/02/DDIA 数据密集型应用笔记/" title="DDIA 数据密集型应用笔记">https://spycsh.github.io/blog/2021/06/02/DDIA 数据密集型应用笔记/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
@@ -789,7 +833,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-笔记"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications  笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可靠，可扩展，可维护的应用系统"><span class="nav-number">1.1.</span> <span class="nav-text">可靠，可扩展，可维护的应用系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可靠性："><span class="nav-number">1.1.1.</span> <span class="nav-text">可靠性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可扩展性"><span class="nav-number">1.1.2.</span> <span class="nav-text">可扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可维护性"><span class="nav-number">1.1.3.</span> <span class="nav-text">可维护性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据模型与查询语言"><span class="nav-number">1.2.</span> <span class="nav-text">数据模型与查询语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关系模型"><span class="nav-number">1.2.1.</span> <span class="nav-text">关系模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NoSQL"><span class="nav-number">1.2.2.</span> <span class="nav-text">NoSQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce-查询"><span class="nav-number">1.2.3.</span> <span class="nav-text">MapReduce 查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图状数据模型"><span class="nav-number">1.2.4.</span> <span class="nav-text">图状数据模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据存储与检索"><span class="nav-number">1.3.</span> <span class="nav-text">数据存储与检索</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-笔记"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications  笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可靠，可扩展，可维护的应用系统"><span class="nav-number">1.1.</span> <span class="nav-text">可靠，可扩展，可维护的应用系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可靠性："><span class="nav-number">1.1.1.</span> <span class="nav-text">可靠性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可扩展性"><span class="nav-number">1.1.2.</span> <span class="nav-text">可扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可维护性"><span class="nav-number">1.1.3.</span> <span class="nav-text">可维护性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据模型与查询语言"><span class="nav-number">1.2.</span> <span class="nav-text">数据模型与查询语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关系模型"><span class="nav-number">1.2.1.</span> <span class="nav-text">关系模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NoSQL"><span class="nav-number">1.2.2.</span> <span class="nav-text">NoSQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce-查询"><span class="nav-number">1.2.3.</span> <span class="nav-text">MapReduce 查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图状数据模型"><span class="nav-number">1.2.4.</span> <span class="nav-text">图状数据模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据存储与检索"><span class="nav-number">1.3.</span> <span class="nav-text">数据存储与检索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构"><span class="nav-number">1.3.1.</span> <span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#哈希索引"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">哈希索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSTables和LSM-Tree"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">SSTables和LSM-Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从SSTable到LSM-Tree"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">从SSTable到LSM-Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-Trees"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">B-Trees</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
