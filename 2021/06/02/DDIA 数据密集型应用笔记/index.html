@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications (I) – 数据系统基础">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-27T15:03:40.251Z">
+<meta property="og:updated_time" content="2021-06-27T23:02:12.737Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDIA 数据密集型应用笔记（I)">
 <meta name="twitter:description" content="Design Data-intensive applications (I) – 数据系统基础">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-27 17:03:40" itemprop="dateModified" datetime="2021-06-27T17:03:40+02:00">2021-06-27</time>
+                <time title="修改时间：2021-06-28 01:02:12" itemprop="dateModified" datetime="2021-06-28T01:02:12+02:00">2021-06-28</time>
               
             
           </span>
@@ -608,6 +608,55 @@
 <li>列存储的写操作</li>
 </ul>
 <p>插入一行后，如果想要像B树一样原地更新不太可能，因为必须重写所有列文件，一致地更新所有列。因此要使用LSM-tree，首先进入内存存储区，再添加到已排序的结构中，再写入磁盘。<strong>这个过程与面向行还是面向列无关</strong>。当累积了足够多的写入时，将与磁盘上的列文件合并，并批量写入新文件。这是Vertica采取的方式。</p>
+<h2 id="数据编码与演化"><a href="#数据编码与演化" class="headerlink" title="数据编码与演化"></a>数据编码与演化</h2><p>代码更迭对于服务端应用程序，需要执行滚动升级rolling update（分阶段发布staged rollout)，即对少数几个节点部署新版本，检查是否正常，然后逐步在所有节点上升级新的代码。无需暂停。对于客户端应用程序，只能寄望于用户，然而他们在一段时间内可能不会马上安装更新。这意味着新旧版本的代码和数据格式可能会在系统共存。因此需要双向的兼容性。</p>
+<ul>
+<li>向后兼容Backward compatibility：较新代码可以读取由旧代码编写的数据。</li>
+<li>向前兼容：较旧代码可以读取由新代码编写的数据。</li>
+</ul>
+<h3 id="数据编码格式"><a href="#数据编码格式" class="headerlink" title="数据编码格式"></a>数据编码格式</h3><p>内存中：数据保存在对象，结构体，列表，哈希表和树中；这些数据结构对CPU高效访问与操作进行了优化。（指针）</p>
+<p>数据写入文件或用网络发送时，必须编码为某种自包含的字节序列（JSON）。相反的过程为解码。</p>
+<p>Java java.io.Serializable, python pickle类似的可以完成编码解码，但是问题是编码往往与特定的编程语言绑定在一起，并且解码过程中需要实例化任意类，会导致安全问题。攻击者可能会远程执行任意代码。</p>
+<ul>
+<li>JSON: JS的一个子集，在Web中内置支持</li>
+<li>XML</li>
+<li>CSV： 语言无关的格式，功能较弱</li>
+</ul>
+<h4 id="Apache-Thrift和Protocol-Buffers"><a href="#Apache-Thrift和Protocol-Buffers" class="headerlink" title="Apache Thrift和Protocol Buffers"></a>Apache Thrift和Protocol Buffers</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"userName"</span>: <span class="string">"Martin"</span>,</span><br><span class="line">    <span class="attr">"favoriteNumber"</span>: <span class="number">1337</span>,</span><br><span class="line">    <span class="attr">"interests"</span>: [<span class="string">"daydreaming"</span>, <span class="string">"hacking"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Thrify用IDL接口定义语言来描述模式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct Person&#123;</span><br><span class="line">    1: required string  userName,</span><br><span class="line">    2: optional i64     favoriteNumber,</span><br><span class="line">    3: optional list&lt;string&gt;    interests</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Protocol Buffers等价模式(.proto文件)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">message Person&#123;</span><br><span class="line">    required string user_name       = 1;</span><br><span class="line">    optional int64 favorite_number  = 2;</span><br><span class="line">    repeated string interests       = 3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面两者都有对应的代码生成工具，生成支持多种编程语言的类<a href="https://colobu.com/2017/03/16/Protobuf3-language-guide/" target="_blank" rel="noopener">参考链接</a>。</p>
+<p>如何用此二者实现向前兼容和向后兼容？</p>
+<ul>
+<li>添加新的字段到模式，给每个字段一个新的标记号码，当旧代码试着读取新代码写入的数据，包括一个不能识别的标记号码（新字段），就忽略。这样可以实现向前兼容</li>
+<li>新代码总是可以读取旧的数据，如果添加新字段，无法使其成为必需字段，因为旧代码不会写入添加新字段，因此新字段需可选或有默认值</li>
+</ul>
+<p>改变数据类型？<br>int64 -&gt; int32 截断<br>int32 -&gt; int64 补0</p>
+<p>Avro适合Hadoop，有两种模式语言（Avro IDL）和基于JSON的语言。</p>
+<p>以上三种的模式语言比XML和JSON简单，支持更详细的验证规则。</p>
+<h3 id="数据流模式"><a href="#数据流模式" class="headerlink" title="数据流模式"></a>数据流模式</h3><p>发送一些数据到非共享内存的另一个进程时，都需要编码为字节序列，方式有：</p>
+<ul>
+<li>通过数据库</li>
+<li>通过服务调用</li>
+<li>通过异步消息传递</li>
+</ul>
+<h4 id="基于服务的数据流：REST和RPC"><a href="#基于服务的数据流：REST和RPC" class="headerlink" title="基于服务的数据流：REST和RPC"></a>基于服务的数据流：REST和RPC</h4><p>Web：客户端（Web浏览器）向Web服务器发出请求，发出GET请求来下载HTML, CSS, JS, 图像等，发出POST请求提交数据到服务器。API包含一组标准的协议和数据格式（HTTP,URL,SSL/TLS,HTML)。</p>
+<p>在<strong>Web浏览器内运行的Javascript应用程序</strong>也可以向服务器发出网络请求，并且可以使用XMLHttpRequest成为HTTP客户端（Ajax）。这种情况下的服务器响应通常不是HTML而是便于客户端应用程序进一步处理的编码数据JSON。</p>
+<p>服务器本身可以是另一项服务的客户端（Web应用服务器作为数据库的客户端）。这种方法用于将大型数据库按照功能区域分解为较小的服务，这样当一个服务需要另一个服务的某些功能或数据时，就会向另一个服务发出请求。这种构建应用程序的方式被称为<strong>微服务体系架构</strong>。</p>
+<p>面向服务/微服务的关键在于，通过使服务可以独立部署和演化，让应用程序更易于更改和维护。每个服务由一个团队拥有。换句话说，应当<strong>期望新旧版本的服务器和客户端同时运行，因此服务器和客户端的数据编码必须在不同版本的服务API之间兼容</strong>。</p>
+<h4 id="网络服务"><a href="#网络服务" class="headerlink" title="网络服务"></a>网络服务</h4><p>REST是一个基于HTTP的设计理念，强调简单的数据格式，使用URL来标识资源，使用HTTP功能进行缓存控制、身份验证和内容类型协商。根据REST原则设计的API称为RESTful。Swagger可以用来描述RESTful API并生成文档。</p>
+<p>SOAP是一种基于XML的协议，用于发出网络API请求。独立于HTTP。SOAP Web服务的API称为WSDL（web services description language，一种基于XML的语言）来描述。</p>
+<p>RPC虽然强调让远程过程调用和调用本地方法一样，但是并没有那么简单。需要考虑远程与本地调用的差异：网络延迟，大数据的指针，语言转换。</p>
+<h4 id="异步消息传递"><a href="#异步消息传递" class="headerlink" title="异步消息传递"></a>异步消息传递</h4><p>使用消息代理（RabbitMQ,Kafka）或Actor（Akka，Orleans，Erlang OTP），节点之间通过互相发送消息进行通信，消息由发送者编码并由接收者解码。</p>
+<p>与直接RPC相比，使用消息代理有以下几个优点：</p>
+<ul>
+<li>接收方不可用或过载，它可以充当缓冲区，提高系统可靠性。</li>
+<li>可以自动将消息重新发送到崩溃的进程，防止丢失。</li>
+<li>避免了发送方需要知道接收方的IP地址和端口号（虚拟机云部署特别有用）。</li>
+<li>支持发送一条消息给多个接收方。</li>
+<li>逻辑上解耦</li>
+</ul>
+<p>与RPC差异在于消息传递通常是<strong>单向</strong>的，发送方通常不期望收到消息的回复。</p>
 
       
     </div>
@@ -875,7 +924,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-I-–-数据系统基础"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (I) – 数据系统基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可靠，可扩展，可维护的应用系统"><span class="nav-number">1.1.</span> <span class="nav-text">可靠，可扩展，可维护的应用系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可靠性："><span class="nav-number">1.1.1.</span> <span class="nav-text">可靠性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可扩展性"><span class="nav-number">1.1.2.</span> <span class="nav-text">可扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可维护性"><span class="nav-number">1.1.3.</span> <span class="nav-text">可维护性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据模型与查询语言"><span class="nav-number">1.2.</span> <span class="nav-text">数据模型与查询语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关系模型"><span class="nav-number">1.2.1.</span> <span class="nav-text">关系模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NoSQL"><span class="nav-number">1.2.2.</span> <span class="nav-text">NoSQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce-查询"><span class="nav-number">1.2.3.</span> <span class="nav-text">MapReduce 查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图状数据模型"><span class="nav-number">1.2.4.</span> <span class="nav-text">图状数据模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据存储与检索"><span class="nav-number">1.3.</span> <span class="nav-text">数据存储与检索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构"><span class="nav-number">1.3.1.</span> <span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#哈希索引"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">哈希索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSTables和LSM-Tree"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">SSTables和LSM-Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从SSTable到LSM-Tree"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">从SSTable到LSM-Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-Trees"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">B-Trees</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B树可靠性"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">B树可靠性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比B树和LSM树"><span class="nav-number">1.3.1.6.</span> <span class="nav-text">对比B树和LSM树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其它索引结构"><span class="nav-number">1.3.1.7.</span> <span class="nav-text">其它索引结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务处理与分析处理"><span class="nav-number">1.3.2.</span> <span class="nav-text">事务处理与分析处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列式存储"><span class="nav-number">1.3.3.</span> <span class="nav-text">列式存储</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-I-–-数据系统基础"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (I) – 数据系统基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可靠，可扩展，可维护的应用系统"><span class="nav-number">1.1.</span> <span class="nav-text">可靠，可扩展，可维护的应用系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可靠性："><span class="nav-number">1.1.1.</span> <span class="nav-text">可靠性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可扩展性"><span class="nav-number">1.1.2.</span> <span class="nav-text">可扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可维护性"><span class="nav-number">1.1.3.</span> <span class="nav-text">可维护性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据模型与查询语言"><span class="nav-number">1.2.</span> <span class="nav-text">数据模型与查询语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关系模型"><span class="nav-number">1.2.1.</span> <span class="nav-text">关系模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NoSQL"><span class="nav-number">1.2.2.</span> <span class="nav-text">NoSQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce-查询"><span class="nav-number">1.2.3.</span> <span class="nav-text">MapReduce 查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图状数据模型"><span class="nav-number">1.2.4.</span> <span class="nav-text">图状数据模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据存储与检索"><span class="nav-number">1.3.</span> <span class="nav-text">数据存储与检索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构"><span class="nav-number">1.3.1.</span> <span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#哈希索引"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">哈希索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSTables和LSM-Tree"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">SSTables和LSM-Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从SSTable到LSM-Tree"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">从SSTable到LSM-Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-Trees"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">B-Trees</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B树可靠性"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">B树可靠性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比B树和LSM树"><span class="nav-number">1.3.1.6.</span> <span class="nav-text">对比B树和LSM树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其它索引结构"><span class="nav-number">1.3.1.7.</span> <span class="nav-text">其它索引结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务处理与分析处理"><span class="nav-number">1.3.2.</span> <span class="nav-text">事务处理与分析处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列式存储"><span class="nav-number">1.3.3.</span> <span class="nav-text">列式存储</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据编码与演化"><span class="nav-number">1.4.</span> <span class="nav-text">数据编码与演化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据编码格式"><span class="nav-number">1.4.1.</span> <span class="nav-text">数据编码格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Apache-Thrift和Protocol-Buffers"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">Apache Thrift和Protocol Buffers</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据流模式"><span class="nav-number">1.4.2.</span> <span class="nav-text">数据流模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基于服务的数据流：REST和RPC"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">基于服务的数据流：REST和RPC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网络服务"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">网络服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步消息传递"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">异步消息传递</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
