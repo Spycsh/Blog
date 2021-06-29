@@ -3,6 +3,23 @@
   
     
     <entry>
+      <title>DDIA 数据密集型应用笔记 (II)</title>
+      <link href="/blog/2021/06/29/DDIA-%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%AC%94%E8%AE%B0-II/"/>
+      <url>/blog/2021/06/29/DDIA-%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%AC%94%E8%AE%B0-II/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Design-Data-intensive-applications-II-–-分布式数据系统"><a href="#Design-Data-intensive-applications-II-–-分布式数据系统" class="headerlink" title="Design Data-intensive applications (II) – 分布式数据系统"></a>Design Data-intensive applications (II) – 分布式数据系统</h1><a id="more"></a><h2 id="数据复制"><a href="#数据复制" class="headerlink" title="数据复制"></a>数据复制</h2>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Distributed System </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>RunSpec——一个跑步app设计</title>
       <link href="/blog/2021/06/23/RunSpec%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%B7%91%E6%AD%A5app%E8%AE%BE%E8%AE%A1/"/>
       <url>/blog/2021/06/23/RunSpec%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%B7%91%E6%AD%A5app%E8%AE%BE%E8%AE%A1/</url>
@@ -14,7 +31,7 @@
     </entry>
     
     <entry>
-      <title>DDIA 数据密集型应用笔记（I)</title>
+      <title>DDIA 数据密集型应用笔记 (I)</title>
       <link href="/blog/2021/06/02/DDIA%20%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%AC%94%E8%AE%B0/"/>
       <url>/blog/2021/06/02/DDIA%20%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
       
