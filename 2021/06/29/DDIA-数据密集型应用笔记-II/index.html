@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications (II) – 分布式数据系统">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-29T21:56:25.323Z">
+<meta property="og:updated_time" content="2021-06-29T22:20:46.388Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDIA 数据密集型应用笔记 (II)">
 <meta name="twitter:description" content="Design Data-intensive applications (II) – 分布式数据系统">
@@ -410,12 +410,24 @@
                 
               
 
-              <time title="创建时间：2021-06-29 23:53:00 / 修改时间：23:56:25" itemprop="dateCreated datePublished" datetime="2021-06-29T23:53:00+02:00">2021-06-29</time>
+              <time title="创建时间：2021-06-29 23:53:00" itemprop="dateCreated datePublished" datetime="2021-06-29T23:53:00+02:00">2021-06-29</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-06-30 00:20:46" itemprop="dateModified" datetime="2021-06-30T00:20:46+02:00">2021-06-30</time>
               
             
           </span>
@@ -449,6 +461,28 @@
 
       
         <h1 id="Design-Data-intensive-applications-II-–-分布式数据系统"><a href="#Design-Data-intensive-applications-II-–-分布式数据系统" class="headerlink" title="Design Data-intensive applications (II) – 分布式数据系统"></a>Design Data-intensive applications (II) – 分布式数据系统</h1><a id="more"></a>
+<p>上一部分针对单机存储系统技术，这一部分我们将讨论多台机器的存储与检索服务。</p>
+<ul>
+<li>扩展性：读写压力大，负载分散到多台机器上</li>
+<li>容错与高可用性：单机故障，多机提供冗余接管失效组件</li>
+<li>延迟：应优先让用户就近的数据中心提供服务</li>
+</ul>
+<blockquote>
+<p>如何处理更强的负载？</p>
+</blockquote>
+<p>垂直扩展（更强大机器）：</p>
+<ul>
+<li><p>共享内存架构：热插拔组件（服务器不关闭机器情况下更换磁盘，内存模块，甚至CPU）；无法异地容错；</p>
+</li>
+<li><p>共享磁盘：数据存储在可共享访问的磁盘阵列上，服务器与磁盘之间往往提供高速网络连接。race condition或锁会限制。</p>
+</li>
+</ul>
+<p>水平扩展：</p>
+<ul>
+<li>无共享shared-nothing架构（本章重点）：每个节点独立使用本地CPU，运行数据库软件的机器或虚拟机称为节点，节点之间的协调通信全部在传统网络且核心逻辑主要依靠软件实现。</li>
+</ul>
+<p><strong>复制和分区</strong><br>复制replication：在多个节点上保存相同数据的副本。</p>
+<p>分区partitioning：将一个大的数据库拆分成多个较小的分区，不同分区分配给不同的节点（sharding）。</p>
 <h2 id="数据复制"><a href="#数据复制" class="headerlink" title="数据复制"></a>数据复制</h2>
       
     </div>
