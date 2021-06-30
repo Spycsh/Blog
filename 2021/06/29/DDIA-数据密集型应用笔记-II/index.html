@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications (II) – 分布式数据系统">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-29T22:20:46.388Z">
+<meta property="og:updated_time" content="2021-06-30T22:55:23.343Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDIA 数据密集型应用笔记 (II)">
 <meta name="twitter:description" content="Design Data-intensive applications (II) – 分布式数据系统">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-30 00:20:46" itemprop="dateModified" datetime="2021-06-30T00:20:46+02:00">2021-06-30</time>
+                <time title="修改时间：2021-07-01 00:55:23" itemprop="dateModified" datetime="2021-07-01T00:55:23+02:00">2021-07-01</time>
               
             
           </span>
@@ -483,7 +483,36 @@
 </ul>
 <p><strong>复制和分区</strong><br>复制replication：在多个节点上保存相同数据的副本。</p>
 <p>分区partitioning：将一个大的数据库拆分成多个较小的分区，不同分区分配给不同的节点（sharding）。</p>
-<h2 id="数据复制"><a href="#数据复制" class="headerlink" title="数据复制"></a>数据复制</h2>
+<h2 id="数据复制"><a href="#数据复制" class="headerlink" title="数据复制"></a>数据复制</h2><h3 id="主节点与从节点"><a href="#主节点与从节点" class="headerlink" title="主节点与从节点"></a>主节点与从节点</h3><blockquote>
+<p>如何确保所有副本之间的数据是一致的？</p>
+</blockquote>
+<p>对于每一笔数据写入，所有副本都有随之更新。否者某些副本将出现不一致，最常见的解决方案是基于主节点的复制（<strong>主从复制</strong>）。在这种情况下，只有主副本处理写请求，写入本地存储，然后将数据更改为复制的日志或更改流发送给所有从副本，每个从副本获得更改日之后应用到本地，严格保持顺序。而对于读请求，主从副本都可以处理。</p>
+<blockquote>
+<p>同步复制还是异步复制</p>
+</blockquote>
+<p>同步是指执行一个请求前，讯问从节点的确认，得到确认后再执行，异步指不用等到确认就立即执行。前者好处在于主节点发生故障数据丢失，从节点就可以继续访问最新数据；缺点在于从节点会阻塞，没有throughput。所以有时设为半同步会比较好。</p>
+<blockquote>
+<p>如何处理主从节点呈现不同时间点的数据？</p>
+</blockquote>
+<p>对<strong>主节点</strong>的数据副本产生一个consistent snapshot，将快照拷贝到新的从节点。从节点连接到主节点并请求快照点之后发生的数据更改日志。快照与复制日志的某个确定位置相关联，这个位置信息在PostgreSQL中称为”log sequence number”，MySQL称为”binlog coordinates”。获得日志后从节点处理主节点上的新的数据变化（追赶caught up)。</p>
+<h4 id="处理节点失效"><a href="#处理节点失效" class="headerlink" title="处理节点失效"></a>处理节点失效</h4><ul>
+<li>从节点失效 - 追赶式恢复</li>
+<li>主节点失效 - 节点切换（leader election，心跳确认失效，选主共识，重新配置reconfigure把主节点降级为从节点并认可新的主节点）</li>
+</ul>
+<blockquote>
+<p>使用异步复制，且失效之前，新的主节点并未收到原主节点的所有数据，选举后，原主节点又重新上线并加入到集群，接下来的写操作会发生什么？</p>
+</blockquote>
+<p>新的主节点会收到冲突的写请求，那么就需要让这个把请求丢弃，如果数据库之外有其它系统依赖于数据库的内容，丢弃数据会特别危险。</p>
+<blockquote>
+<p>脑裂（split brain）是什么？</p>
+</blockquote>
+<p>两个节点各认为是主节点，都会接收写请求。</p>
+<blockquote>
+<p>如何设置合适的超时来检测主节点失效?</p>
+</blockquote>
+<p>超时太短，突发的负载峰值会导致节点的响应时间变长甚至超时，严重拥塞。</p>
+<h3 id="复制滞后问题"><a href="#复制滞后问题" class="headerlink" title="复制滞后问题"></a>复制滞后问题</h3><p>上面讲到了<strong>冗余</strong>容忍节点故障，那么可扩展性（多节点处理更多请求），低延迟（将副本部署在地理上距离用户更近的地方）？</p>
+
       
     </div>
 
@@ -746,7 +775,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主节点与从节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">主节点与从节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理节点失效"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">处理节点失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制滞后问题"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制滞后问题</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
