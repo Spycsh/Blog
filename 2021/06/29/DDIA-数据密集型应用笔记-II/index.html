@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications (II) – 分布式数据系统">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-30T22:55:23.343Z">
+<meta property="og:updated_time" content="2021-07-03T21:43:56.244Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDIA 数据密集型应用笔记 (II)">
 <meta name="twitter:description" content="Design Data-intensive applications (II) – 分布式数据系统">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-07-01 00:55:23" itemprop="dateModified" datetime="2021-07-01T00:55:23+02:00">2021-07-01</time>
+                <time title="修改时间：2021-07-03 23:43:56" itemprop="dateModified" datetime="2021-07-03T23:43:56+02:00">2021-07-03</time>
               
             
           </span>
@@ -511,7 +511,54 @@
 <p>如何设置合适的超时来检测主节点失效?</p>
 </blockquote>
 <p>超时太短，突发的负载峰值会导致节点的响应时间变长甚至超时，严重拥塞。</p>
-<h3 id="复制滞后问题"><a href="#复制滞后问题" class="headerlink" title="复制滞后问题"></a>复制滞后问题</h3><p>上面讲到了<strong>冗余</strong>容忍节点故障，那么可扩展性（多节点处理更多请求），低延迟（将副本部署在地理上距离用户更近的地方）？</p>
+<h3 id="复制滞后问题"><a href="#复制滞后问题" class="headerlink" title="复制滞后问题"></a>复制滞后问题</h3><p>上面讲到了利用<strong>冗余</strong>容忍节点故障，复制还可以加强可扩展性（多节点处理更多请求），以及保证低延迟（将副本部署在地理上距离用户更近的地方）？</p>
+<p>如果用户从副本读数据，但副本还没有和主节点同步。这时就会引起复制滞后replication lag，而在现实生活中又可能对应下列三种问题。</p>
+<h4 id="读自己的写-read-your-own-write"><a href="#读自己的写-read-your-own-write" class="headerlink" title="读自己的写 read your own write"></a>读自己的写 read your own write</h4><p>写请求到主节点，主节点insert一条数据，复制SQL语句到从节点，但这条SQL尚未到达从节点，此时若从从节点查询结果，结果可能空。</p>
+<p>因此我们需要<strong>写后读一致性</strong>，也称为读写一致性。</p>
+<p>解决方法有：</p>
+<ul>
+<li><p>社交网站上用户首页信息通常只能由所有者编辑，其他人无法编辑，所以总是从主节点读取字节的首页配置文件。如果用户访问可能会被修改的内容，从主节点读取；否则，在从节点读取。</p>
+</li>
+<li><p>监控从节点的复制滞后程度。避免从滞后时间过长的从节点读取。</p>
+</li>
+</ul>
+<h4 id="单调读-monotonic-reads"><a href="#单调读-monotonic-reads" class="headerlink" title="单调读 monotonic reads"></a>单调读 monotonic reads</h4><p>写请求到主节点，主节点insert一条数据，复制SQL语句到A,B两个从节点，传到了A节点但没有传到B节点，用户先从A从节点查询结果有数据，而从B节点查询结果无数据。</p>
+<p>因此我们需要单调读，这介于强一致性和最终一致性之间。它保证了用户绝对不会看到这种“回滚”现象。</p>
+<p>解决方法：<br>用户总是从同一副本执行读取，为此，需要基于用户ID的哈希选择副本，副本失效则要重新路由到另外一个副本。</p>
+<h4 id="前缀一致读-consistent-prefix-reads"><a href="#前缀一致读-consistent-prefix-reads" class="headerlink" title="前缀一致读 consistent prefix reads"></a>前缀一致读 consistent prefix reads</h4><p>情景：对于观察者，A提出问题之前，B就就回答了A的问题。</p>
+<p>这是分区partitioned（分片sharded）数据库的一个特殊问题。不同分区独立运行，因此不存在全局写入顺序，这就导致当用户从数据库中读时，可能会看到数据库的某部分旧值和另一部分新值。</p>
+<p>A在一个分区，B在另一个分区，分区各有一个从节点，主节点A，B接发消息维持顺序，从节点逆序，观察者从从节点查看消息记录发现颠倒。</p>
+<p>解决方法：<br>只在主节点进行特定类型的读取？应用层代码复杂；<br>支持事务？可用性代价过高。</p>
+<h3 id="多主节点复制"><a href="#多主节点复制" class="headerlink" title="多主节点复制"></a>多主节点复制</h3><p>主节点网络中断，主从复制就无效了。因此可以以一定的topology配置多个主节点。</p>
+<h4 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h4><ul>
+<li>多数据中心</li>
+</ul>
+<p>多数据中心（接近用户）。在每个数据中心都配置主节点。性能上，主从复制每个写请求都必须经由广域网传送到主节点所在的数据中心，而多主节点复制中，可以在本地数据中心快速响应，然后采取<strong>异步复制</strong>将变化同步到其他数据中心。对上层应用有效屏蔽了数据中心之间的网络延迟，使得终端用户所体验到的性能更好。此外，还可以容忍数据中心失效和网络问题。如MySQL的Tungsten Replicator，PostgreSQL的BDR和Oracle的GoldenGate。</p>
+<p>问题：冲突解决？</p>
+<ul>
+<li>离线客户端操作</li>
+</ul>
+<p>应用在网络断开后还要继续工作。比如手机，笔记本上的日历，需要随时查看或添加，在离线状态下进行任何更改会在下次设备上线时与服务器同步。例子：CouchDB</p>
+<ul>
+<li>协作编辑</li>
+</ul>
+<p>Google Docs。冲突可以将文档锁定，或单个按键或全程无锁。</p>
+<h4 id="处理写冲突"><a href="#处理写冲突" class="headerlink" title="处理写冲突"></a>处理写冲突</h4><ul>
+<li><p>检测到冲突后，根据ID或时间戳大小先后选择一个写请求作为胜利者，将另外的丢弃（数据丢失）。</p>
+</li>
+<li><p>所有冲突保存下来，下一次读取时，提示用户或自动解决冲突（CouchDB）。</p>
+</li>
+</ul>
+<h4 id="拓补结构"><a href="#拓补结构" class="headerlink" title="拓补结构"></a>拓补结构</h4><p>多个主节点的拓补（环形MySQL，星形，all-to-all）。环形拓补中，中间节点需要转发数据变更，如果某个节点收到包含自身标识符的数据更改，表明请求已经被处理过。问题是单点故障。需要重新配置拓补结构排除故障。</p>
+<p>all-to-all拓补中消息可以沿不同方向传播，没有单点故障。但是，可能会出现某些网络链路比其他更快的情况，产生意外的顺序。（因果序乱了，类似前缀一致读中）。</p>
+<p>为此可以使用version vector向量来描述因果序。</p>
+<h3 id="无主节点复制"><a href="#无主节点复制" class="headerlink" title="无主节点复制"></a>无主节点复制</h3><p>Dynamo, Riak, Cassandra。取消主节点，任何副本都可以接收写请求。</p>
+<p>向多个副本并行发送读请求，根据版本号确定哪个值更新。向多个副本并行发送写请求，三个副本有两个成功确认写操作，则成功。</p>
+<p>read-repair:</p>
+<p>当检测查询到三个中两个副本返回一个值，另一个返回一个旧值时，把新值写入旧的副本。</p>
+<p>anti-entropy：<br>后台进程不断查找副本之间的差异。同步到最新。</p>
+<h4 id="读写quorum"><a href="#读写quorum" class="headerlink" title="读写quorum"></a>读写quorum</h4><p>多少个副本完成才可以认为写成功？</p>
+<p>n个副本，w个节点确认，必须查询r个节点，则只需要w+r&gt;n，读取的节点一定包含最新值。一般来说n是奇数，w=r=(n+1)/2向上舍入。读多写少的情况下，w=n，r=1，写需要所有节点确认，查询只需查询1给节点也是ok的。</p>
 
       
     </div>
@@ -775,7 +822,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主节点与从节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">主节点与从节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理节点失效"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">处理节点失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制滞后问题"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制滞后问题</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主节点与从节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">主节点与从节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理节点失效"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">处理节点失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制滞后问题"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制滞后问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读自己的写-read-your-own-write"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">读自己的写 read your own write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单调读-monotonic-reads"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">单调读 monotonic reads</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前缀一致读-consistent-prefix-reads"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">前缀一致读 consistent prefix reads</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多主节点复制"><span class="nav-number">1.1.3.</span> <span class="nav-text">多主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用场景"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理写冲突"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">处理写冲突</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓补结构"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">拓补结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无主节点复制"><span class="nav-number">1.1.4.</span> <span class="nav-text">无主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读写quorum"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">读写quorum</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
