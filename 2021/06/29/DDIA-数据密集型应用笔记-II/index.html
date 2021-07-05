@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications (II) – 分布式数据系统">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-07-03T21:43:56.244Z">
+<meta property="og:updated_time" content="2021-07-05T22:08:45.663Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDIA 数据密集型应用笔记 (II)">
 <meta name="twitter:description" content="Design Data-intensive applications (II) – 分布式数据系统">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-07-03 23:43:56" itemprop="dateModified" datetime="2021-07-03T23:43:56+02:00">2021-07-03</time>
+                <time title="修改时间：2021-07-06 00:08:45" itemprop="dateModified" datetime="2021-07-06T00:08:45+02:00">2021-07-06</time>
               
             
           </span>
@@ -511,7 +511,7 @@
 <p>如何设置合适的超时来检测主节点失效?</p>
 </blockquote>
 <p>超时太短，突发的负载峰值会导致节点的响应时间变长甚至超时，严重拥塞。</p>
-<h3 id="复制滞后问题"><a href="#复制滞后问题" class="headerlink" title="复制滞后问题"></a>复制滞后问题</h3><p>上面讲到了利用<strong>冗余</strong>容忍节点故障，复制还可以加强可扩展性（多节点处理更多请求），以及保证低延迟（将副本部署在地理上距离用户更近的地方）？</p>
+<h3 id="复制滞后问题"><a href="#复制滞后问题" class="headerlink" title="复制滞后问题"></a>复制滞后问题</h3><p>上面讲到了利用<strong>冗余</strong>容忍节点故障，复制还可以加强<strong>可扩展性</strong>（多节点处理更多请求），以及保证<strong>低延迟</strong>（将副本部署在地理上距离用户更近的地方）？</p>
 <p>如果用户从副本读数据，但副本还没有和主节点同步。这时就会引起复制滞后replication lag，而在现实生活中又可能对应下列三种问题。</p>
 <h4 id="读自己的写-read-your-own-write"><a href="#读自己的写-read-your-own-write" class="headerlink" title="读自己的写 read your own write"></a>读自己的写 read your own write</h4><p>写请求到主节点，主节点insert一条数据，复制SQL语句到从节点，但这条SQL尚未到达从节点，此时若从从节点查询结果，结果可能空。</p>
 <p>因此我们需要<strong>写后读一致性</strong>，也称为读写一致性。</p>
@@ -559,6 +559,37 @@
 <p>anti-entropy：<br>后台进程不断查找副本之间的差异。同步到最新。</p>
 <h4 id="读写quorum"><a href="#读写quorum" class="headerlink" title="读写quorum"></a>读写quorum</h4><p>多少个副本完成才可以认为写成功？</p>
 <p>n个副本，w个节点确认，必须查询r个节点，则只需要w+r&gt;n，读取的节点一定包含最新值。一般来说n是奇数，w=r=(n+1)/2向上舍入。读多写少的情况下，w=n，r=1，写需要所有节点确认，查询只需查询1给节点也是ok的。</p>
+<h2 id="数据分区"><a href="#数据分区" class="headerlink" title="数据分区"></a>数据分区</h2><p>分区数据库早在20世纪80年代就有了，最近又被一些NoSQL和基于Hadoop的数据库重视起来。接下来会讨论如何根据数据索引分区，以及分区的再平衡，和如何路由请求到正确的分区并查询。</p>
+<h3 id="数据分区与复制"><a href="#数据分区与复制" class="headerlink" title="数据分区与复制"></a>数据分区与复制</h3><p>分区（可扩展性）：面临海量数据，需要把数据切分成多段，那么每一段就是一个分区，</p>
+<p>复制（冗余容错）：一个分区有一个主副本（写请求经过）和多个从副本，每个副本存在不同的节点上。</p>
+<p>如果分区不均匀，那么某些分区节点会承担更多的数据量或查询负载，称之为倾斜skewed。因此我们有几种分区方法</p>
+<ul>
+<li>基于关键字区间分区</li>
+</ul>
+<p>类似字典，ABC顺序。分区边界由管理员手动确定。Bigtable、HBase、RethinkDB、2.4版本之前的MongoDB。</p>
+<p>对于时间戳，可以很好的区间查询。但是可能某天写入过多（当天分区），负载过高，而其它分区空闲。为此，可以引入传感器名称，然后按时间分区。</p>
+<ul>
+<li>基于关键字哈希值分区</li>
+</ul>
+<p>哈希函数可以将字符串转换为定长随机分布的数值，减轻热点（相近的两个key也会存储在不同分区上），但是就丧失了区间查询。</p>
+<ul>
+<li>组合索引</li>
+</ul>
+<p>Cassandra的表可以声明为由多个列组成的复合主键。复合主键只有第一部分可用于哈希分区，其它列用作组合索引对Cassandra SSTable中的数据进行排序。因此它不支持在第一列上进行区间查询，但如果第一列指定好了固定值，可以对其他列进行高效的区间查询。</p>
+<p>e.g. (user_id, update_timestamp)。不同user在不同分区，但消息时间戳顺序存在一个分区上。</p>
+<h4 id="负载倾斜与热点"><a href="#负载倾斜与热点" class="headerlink" title="负载倾斜与热点"></a>负载倾斜与热点</h4><p>出现大量对相同关键字的写操作（点赞，关键字名人ID），哈希无效，因为两个相同的哈希值仍然相同。一个操作是key头尾各加一个随机数。</p>
+<h3 id="分区与二级索引"><a href="#分区与二级索引" class="headerlink" title="分区与二级索引"></a>分区与二级索引</h3><p>上面讨论的是kv模型，根据关键字查，但是二级索引会更复杂，是关系数据库的必备特性。HBase不支持，但是Riak支持，也是ES等全文索引的根本。</p>
+<ul>
+<li>基于文档分区的二级索引</li>
+</ul>
+<p>假设二手车ID: 0~1000, 根据id两个分区，按颜色和厂商过滤，就需要并行对两个分区，生成color:black, color:silver等<strong>文档ID的list</strong>，软件合并（对所有分区执行查询，然后合并结果，scatter/gather）。</p>
+<ul>
+<li>基于词条的二级索引</li>
+</ul>
+<p>对所有数据进行全局索引，而不是每个分区维护自己的本地索引。读取更为高效，不需要并行scatter/gather，只需对包含词条的那个分区发出读请求。写入慢，负载，二级索引分区可能不同、在不同节点上，产生写放大。</p>
+<blockquote>
+<p>读放大（Read Amplification）。LSM-Tree 的读操作需要从新到旧（从上到下）一层一层查找，直到找到想要的数据。这个过程可能需要不止一次 I/O。特别是区间查询的情况，影响很明显。<br>RocksDB 和 LevelDB后台compaction减少读放大的同时，也会增加写放大的问题，也即观察到的写入数据多于上层程序写入的数据。</p>
+</blockquote>
 
       
     </div>
@@ -822,7 +853,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主节点与从节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">主节点与从节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理节点失效"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">处理节点失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制滞后问题"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制滞后问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读自己的写-read-your-own-write"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">读自己的写 read your own write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单调读-monotonic-reads"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">单调读 monotonic reads</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前缀一致读-consistent-prefix-reads"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">前缀一致读 consistent prefix reads</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多主节点复制"><span class="nav-number">1.1.3.</span> <span class="nav-text">多主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用场景"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理写冲突"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">处理写冲突</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓补结构"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">拓补结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无主节点复制"><span class="nav-number">1.1.4.</span> <span class="nav-text">无主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读写quorum"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">读写quorum</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主节点与从节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">主节点与从节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理节点失效"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">处理节点失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制滞后问题"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制滞后问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读自己的写-read-your-own-write"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">读自己的写 read your own write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单调读-monotonic-reads"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">单调读 monotonic reads</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前缀一致读-consistent-prefix-reads"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">前缀一致读 consistent prefix reads</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多主节点复制"><span class="nav-number">1.1.3.</span> <span class="nav-text">多主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用场景"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理写冲突"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">处理写冲突</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓补结构"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">拓补结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无主节点复制"><span class="nav-number">1.1.4.</span> <span class="nav-text">无主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读写quorum"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">读写quorum</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据分区"><span class="nav-number">1.2.</span> <span class="nav-text">数据分区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分区与复制"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据分区与复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#负载倾斜与热点"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">负载倾斜与热点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分区与二级索引"><span class="nav-number">1.2.2.</span> <span class="nav-text">分区与二级索引</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
