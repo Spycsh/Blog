@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications (II) – 分布式数据系统">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-07-05T22:08:45.663Z">
+<meta property="og:updated_time" content="2021-07-07T22:46:52.454Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDIA 数据密集型应用笔记 (II)">
 <meta name="twitter:description" content="Design Data-intensive applications (II) – 分布式数据系统">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-07-06 00:08:45" itemprop="dateModified" datetime="2021-07-06T00:08:45+02:00">2021-07-06</time>
+                <time title="修改时间：2021-07-08 00:46:52" itemprop="dateModified" datetime="2021-07-08T00:46:52+02:00">2021-07-08</time>
               
             
           </span>
@@ -590,6 +590,75 @@
 <blockquote>
 <p>读放大（Read Amplification）。LSM-Tree 的读操作需要从新到旧（从上到下）一层一层查找，直到找到想要的数据。这个过程可能需要不止一次 I/O。特别是区间查询的情况，影响很明显。<br>RocksDB 和 LevelDB后台compaction减少读放大的同时，也会增加写放大的问题，也即观察到的写入数据多于上层程序写入的数据。</p>
 </blockquote>
+<h3 id="分区再平衡"><a href="#分区再平衡" class="headerlink" title="分区再平衡"></a>分区再平衡</h3><p>随着时间的推移，数据库需要增加节点（冗余容错，更多CPU处理负载，更多磁盘和内存存储），这样一来，请求需要从一个节点转移到另一个节点。这被称之为再平衡。目标是至少要满足：负载、读写请求数据存储更均匀分布，再平衡过程中，数据库可以继续正常提供读写服务，避免不必要的负载迁移，尽量减少网络和磁盘I/O。</p>
+<h4 id="动态再平衡的策略"><a href="#动态再平衡的策略" class="headerlink" title="动态再平衡的策略"></a>动态再平衡的策略</h4><p>为什么不hash(key) 然后取模（mod节点数，以均匀分布所有节点到不同分区）呢？</p>
+<p>迁移数据操作过于频繁。假设hash(key) = 123456，如果节点数N增加，hash(key) mod N 不断变化，数据必须随节点数变化而不断迁移。</p>
+<ul>
+<li>固定数量的分区</li>
+</ul>
+<p>先事先设立20个分区（远大于节点个数），假设有4个节点，每个节点有5个分区，一旦集群中添加一个新节点，该节点在每个现有的节点上匀走几（这里是1）个分区，直到分区再次达到全局平衡。删除则相反操作。</p>
+<p>这里不会改变key到分区的映射，只会调整分区与节点的对应关系。而且可以逐步完成，旧的分区仍然可以接收读写请求。</p>
+<p>Riak、ES、Couchbase都支持这种动态平衡的方法。</p>
+<p>数据集总规模不确定的情况下，分区数量怎样算适宜？很难达到一个取舍点。</p>
+<ul>
+<li>动态分区</li>
+</ul>
+<p>动态分区。分区数量可以自动适配数据总量。分区数据太大就分裂、太小就合并。MongoDB、HBase。每个分区总是分配给一个节点，每个节点可以承担多个分区。对于HBase，分区文件传输需要HDFS。</p>
+<ul>
+<li>按节点比例分区</li>
+</ul>
+<p>Cassandra。分区数与集群节点数成正比。</p>
+<h3 id="请求路由"><a href="#请求路由" class="headerlink" title="请求路由"></a>请求路由</h3><p>发生了分区再平衡，怎么找到关键字？需要连接哪个IP地址和哪个端口号？</p>
+<p>这属于服务发现问题（zookeeper），任何网络访问的系统都有这样的问题，尤其是当服务目标支持高可用时。</p>
+<p>处理策略（3种）。</p>
+<ul>
+<li><strong>允许客户端链接任意的节点</strong>（例如，采用循环式的负载均衡器）。如果某节点恰好拥有所请求的分区，则直接处理该请求；否则，将请求转发到下一个合适的节点，接收答复，并将答复返回给客户端。</li>
+<li>将所有客户端的请求都发送到一个<strong>路由层</strong>，由后者负责将请求转发到对应的分区节点上。 路由层本身不处理任何请求，它仅充一个分区感知的负载均衡器。</li>
+<li>客户端感知分区和节点分配关系。此时，客户端可以直接连接到目标节点， 而不需要任何中介。</li>
+</ul>
+<p>所有参与者都要达成共识（分区与节点的对应关系及其变化）。如ZooKeeper，每个节点向ZooKeeper注册自己，它维护了分区到节点的最终映射关系。其他参与者（路由层或分区感知的客户端）订阅此信息。一旦分区改变或者添加、删除节点，ZooKeeper就会通知路由层。</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务将应用程序多个读写操作捆绑在一起成为一个逻辑操作单元。而使用事务，也许会丧失一些可用性。为此我们必须考虑事务的作用以及如何使用它。</p>
+<h3 id="深入理解事务"><a href="#深入理解事务" class="headerlink" title="深入理解事务"></a>深入理解事务</h3><h4 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h4><p>原子性Atomicity，一致性Consistency，隔离性Isolation，持久性Durability描述了数据库的容错机制。</p>
+<p>A：在出错时中止事务，并将部分完成的写入全部丢弃。不用担心数据库的部分失败，它总是保证要么全部成功，要么全部失败</p>
+<p>C：数据库处于应用程序所期待的“预期状态” （账户贷款余额和借款保持平衡）</p>
+<p>I：并发执行的多个事务相互隔离，不能相互交叉。（不能有race condition）</p>
+<p>D：一旦，事务提交成功，即使硬件故障或数据库崩溃，事务写入的任何数据也不会消失。（硬盘或SSD，预写日志WAL）</p>
+<p>脏读脏写、幻读、不可重复读</p>
+<p>解决方法：四种隔离级别read_uncommit，read_commit，read_repeatable，Serializable</p>
+<p><a href="https://spycsh.github.io/blog/2021/02/22/dirty-read-phantom-read-and-unrepeatable-read/">参考</a></p>
+<p>补充总结：</p>
+<ul>
+<li>read_commit</li>
+</ul>
+<p>防止了脏读（读数据库时，只能看到成功提交的数据）；防止脏写（写数据库时，只会覆盖已经成功提交的数据）。</p>
+<p>脏写用行级锁来防止，当事务想修改某个对象（例如行或文档）时，它<br>必须首先获得该对象的锁；然后一直持有锁直到事务提交（或中止）。</p>
+<p><strong>不能用读锁因为一个写事务就会阻塞很多读的锁申请。因此，大多数据库会维护一个旧值和当前写事务要设置的新值两个版本。事务提交前，所有其他读操作都读旧值，事务提交后才会切换到读取新值</strong>。</p>
+<ul>
+<li>read_repeatable</li>
+</ul>
+<p>防止了重复读问题（A读，B写，B提交，A再读，不一致）</p>
+<p>MVCC多版本并发控制的<strong>一致性快照</strong>的可见性规则： </p>
+<ol>
+<li><p>每笔事务开始，列出当时尚在进行中的事务，忽略这些事务完成的部分写入（尽管之后可能会被提交），即不可见</p>
+</li>
+<li><p>所有终止事务所做的修改全部不可见</p>
+</li>
+<li><p>较晚事务ID所做的任何修改不可见，不管这些事务是否完成了提交</p>
+</li>
+<li><p>此外，其他所有的写入都对应用查询可见</p>
+</li>
+</ol>
+<ul>
+<li>serializable</li>
+</ul>
+<p>防止了写倾斜（医生轮班例子，同一个会议室预订，声明同一个用户名）与幻读（在一个事务中的写入改变了另一个事务查询结果的现象， 称为幻读）</p>
+<blockquote>
+<p>TOREAD<br><a href="https://juejin.cn/post/6844903799534911496" target="_blank" rel="noopener">https://juejin.cn/post/6844903799534911496</a></p>
+</blockquote>
+<p>可串行化的三种技术：严格串行顺序执行Redis、两阶段加锁2PL（广泛运用）、乐观并发。</p>
+<p>2PL:<br>如果事务A已经<strong>读取</strong>了某个对象， 此时事务B想要写入该对象， 那么B必须等到A<strong>提交或中止</strong>之才能继续。 以确保B不会在事务A执行的过程中间去修改对象。如果事务A已经<strong>修改</strong>了对象， 此时事务B想要读取该对象， 则B必须等到A<strong>提交或中止</strong>之后才能继续。 对于2PL, 不会出现读到旧值的情况。</p>
+<p>谓词锁（查询条件加锁），效果不佳，使用索引区间（next-key locking)锁。数据库可以简单地将共享锁附加到索引条目，表明事务已搜索了数据。</p>
+<p>TOREAD</p>
 
       
     </div>
@@ -853,7 +922,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主节点与从节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">主节点与从节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理节点失效"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">处理节点失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制滞后问题"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制滞后问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读自己的写-read-your-own-write"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">读自己的写 read your own write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单调读-monotonic-reads"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">单调读 monotonic reads</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前缀一致读-consistent-prefix-reads"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">前缀一致读 consistent prefix reads</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多主节点复制"><span class="nav-number">1.1.3.</span> <span class="nav-text">多主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用场景"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理写冲突"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">处理写冲突</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓补结构"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">拓补结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无主节点复制"><span class="nav-number">1.1.4.</span> <span class="nav-text">无主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读写quorum"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">读写quorum</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据分区"><span class="nav-number">1.2.</span> <span class="nav-text">数据分区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分区与复制"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据分区与复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#负载倾斜与热点"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">负载倾斜与热点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分区与二级索引"><span class="nav-number">1.2.2.</span> <span class="nav-text">分区与二级索引</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-分布式数据系统"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 分布式数据系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主节点与从节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">主节点与从节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理节点失效"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">处理节点失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制滞后问题"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制滞后问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读自己的写-read-your-own-write"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">读自己的写 read your own write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单调读-monotonic-reads"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">单调读 monotonic reads</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前缀一致读-consistent-prefix-reads"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">前缀一致读 consistent prefix reads</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多主节点复制"><span class="nav-number">1.1.3.</span> <span class="nav-text">多主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用场景"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理写冲突"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">处理写冲突</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓补结构"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">拓补结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无主节点复制"><span class="nav-number">1.1.4.</span> <span class="nav-text">无主节点复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读写quorum"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">读写quorum</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据分区"><span class="nav-number">1.2.</span> <span class="nav-text">数据分区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分区与复制"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据分区与复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#负载倾斜与热点"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">负载倾斜与热点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分区与二级索引"><span class="nav-number">1.2.2.</span> <span class="nav-text">分区与二级索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分区再平衡"><span class="nav-number">1.2.3.</span> <span class="nav-text">分区再平衡</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#动态再平衡的策略"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">动态再平衡的策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求路由"><span class="nav-number">1.2.4.</span> <span class="nav-text">请求路由</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">1.3.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#深入理解事务"><span class="nav-number">1.3.1.</span> <span class="nav-text">深入理解事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ACID"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">ACID</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
