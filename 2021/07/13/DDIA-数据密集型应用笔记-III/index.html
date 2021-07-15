@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="Spycsh">
 <meta property="og:description" content="Design Data-intensive applications (II) – 派生数据">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-07-14T23:05:11.323Z">
+<meta property="og:updated_time" content="2021-07-15T22:39:47.776Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDIA 数据密集型应用笔记 （III）">
 <meta name="twitter:description" content="Design Data-intensive applications (II) – 派生数据">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-07-15 01:05:11" itemprop="dateModified" datetime="2021-07-15T01:05:11+02:00">2021-07-15</time>
+                <time title="修改时间：2021-07-16 00:39:47" itemprop="dateModified" datetime="2021-07-16T00:39:47+02:00">2021-07-16</time>
               
             
           </span>
@@ -519,15 +519,48 @@
 <p>某个reducer必须处理比其他reducer更多的记录。然而，MapReduce必须等到所有mapper和reducer都完成时才能完成。</p>
 <p>解决方法是先抽样作业(Pig)或明确指定(Crunch)哪些是热键，然后复制到多个reducer并行处理。</p>
 <p>Hive则是明确指定哪些是热键，然后独立出来，使用map端join。</p>
-<h4 id="map端join"><a href="#map端join" class="headerlink" title="map端join"></a>map端join</h4><p>从每个输入记录中提取关键字和值，将键值对分配给reducer分区，并按关键字排序。</p>
+<h4 id="map端join"><a href="#map端join" class="headerlink" title="map端join"></a>map端join</h4><p>reducer join：mapper从每个输入记录中提取关键字和值，将键值对分配给reducer分区，并按关键字排序。这样的问题是复制到reducer以及合并reducer输入可能会是非常昂贵的操作。</p>
+<p>而map端join则是缩减版的MapReduce作业。没有reducer，没有排序，每个mapper只需从分布式文件系统中读取输入文件块，然后将输出文件写入文件系统即可。</p>
+<p>以下是三种<strong>优化</strong>：</p>
 <ul>
-<li><p>广播哈希join</p>
+<li>广播哈希join</li>
+</ul>
+<p>实现map端join的<strong>最简单方法</strong>广播哈希适合大数据与小数据join，尤其当小数据集能够全部加载到每个mapper的内存（以哈希表形式）中。每个大数据集的分区都会读取<strong>整个</strong>小数据集。</p>
+<p>另外不一定要把小数据集保存在哈希表中，也可以保存到本地磁盘上的只读索引中（驻留在操作系统的页面缓存中）。</p>
+<p>Hive中称为（MapJoin），Pig中称为（replicated join）。</p>
+<ul>
+<li>分区哈希join</li>
+</ul>
+<p><strong>如果以“相同”方式对map端的join的输入进行分区（某个key都在一个分区里）</strong>，则哈希join方法可以独立作用于每个分区。例如，可以根据用户ID的最后一个数字来分配活动事件和用户数据库的记录。</p>
+<p>这样的优点是每个mapper都可以将较少的数据加载到其哈希表中。</p>
+<p>Hive这称为bucketed map join。</p>
+<ul>
+<li>map端合并join</li>
+</ul>
+<p><strong>输入数据集不仅以“相同”的方式进行了分区（某个key都在一个分区里），也同时基于相同关键字进行了排序</strong>，可以使用另一种变体。</p>
+<p>直接按关键字升序增量读取两个输入文件，并且匹配具有相同关键字的记录。</p>
+<h4 id="MapReduce的弊端"><a href="#MapReduce的弊端" class="headerlink" title="MapReduce的弊端"></a>MapReduce的弊端</h4><p>中间状态实体化</p>
+<ul>
+<li><p>某些任务需要比其他任务花费更长的时间，必须等待前面作业所有任务完成会减慢整个工作流的执行。</p>
 </li>
-<li><p>分区哈希join</p>
+<li><p>mapper有时是冗余的。可能只需要mapper-&gt;reducer-&gt;reducer-&gt;reducer…，直接链接在一起</p>
 </li>
-<li><p>map端合并join</p>
+<li><p>将中间状态存储在分布式文件系统中意味着这些文件被复制到多个节点，这对临时数据来说是大材小用了。</p>
 </li>
 </ul>
+<h4 id="数据流引擎"><a href="#数据流引擎" class="headerlink" title="数据流引擎"></a>数据流引擎</h4><p>为了解决以上问题，开发了分布式批处理的新的执行引擎：Spark，Tez和Flink。<strong>也是有分区并行工作，复制输出到网络，成为另一个功能的输入</strong>。不同的是</p>
+<ul>
+<li>不需要map和reduce，而是用更灵活的函数运算符</li>
+<li>排序等代价昂贵的实际需要才进行</li>
+<li>没有不必要的mapper</li>
+<li>所有join和数据依赖明确声明，因此调度器知道哪些数据在哪里是必须的，可以本地优化。 例如，可以尝试将占用某些数据的任务放在与生成它的任务相同的机器上，以便可以通过共享内存缓冲区来交换数据，而不必通过网络复制数据。</li>
+<li>中间状态保存在内存或本地磁盘而不是HDFS(复制到多个节点并写入每个副本所在的磁盘)</li>
+<li>运算符可以在输入准备就绪后立即开始执行，无须等待前一个全部完成。</li>
+<li>MapReduce为每个任务启动一个新的JVM，现有Java虚拟机JVM可以被重用来运行新的运算符，减少开销。</li>
+</ul>
+<blockquote>
+<p>容错<br>Spark, Flink和Tez避免将中间状态写入HDFS, 所以它们采用不同的方法来容忍错误： 如果机器发生故障， 并且该机器上的中间状态丢失， 则利用其他可用的数据重新计算（例如之前的中间阶段， 如果可能的话；或原始输入数据， 通常在HDFS上）。<br>为了实现重新计算，框架必须追踪给定数据是如何计算的， 使用了哪个输入分区，以及应用了哪个运算符。Spark使用弹性分布式数据集(Resilient Distributed Dataset, RDD)抽象来追踪数据的祖先, 而Flink对运算符状态建立检查点，从而允许将执行过程中遇到故障的运算符恢复运行。</p>
+</blockquote>
 
       
     </div>
@@ -596,6 +629,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2021/07/15/使用sftp在不同云主机间传递文件/" rel="prev" title="使用sftp在不同云主机间传递文件">
+                使用sftp在不同云主机间传递文件 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -667,7 +704,7 @@
                 
                   <a href="/blog/archives">
                 
-                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-count">33</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -721,7 +758,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -791,7 +830,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-派生数据"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 派生数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#批处理系统"><span class="nav-number">1.1.</span> <span class="nav-text">批处理系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UNIX"><span class="nav-number">1.1.1.</span> <span class="nav-text">UNIX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce与分布式文件系统"><span class="nav-number">1.1.2.</span> <span class="nav-text">MapReduce与分布式文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce作业执行"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">MapReduce作业执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduce端的join与分组"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">Reduce端的join与分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理数据倾斜"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">处理数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#map端join"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">map端join</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-Data-intensive-applications-II-–-派生数据"><span class="nav-number">1.</span> <span class="nav-text">Design Data-intensive applications (II) – 派生数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#批处理系统"><span class="nav-number">1.1.</span> <span class="nav-text">批处理系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UNIX"><span class="nav-number">1.1.1.</span> <span class="nav-text">UNIX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce与分布式文件系统"><span class="nav-number">1.1.2.</span> <span class="nav-text">MapReduce与分布式文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce作业执行"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">MapReduce作业执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduce端的join与分组"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">Reduce端的join与分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理数据倾斜"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">处理数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#map端join"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">map端join</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce的弊端"><span class="nav-number">1.1.2.5.</span> <span class="nav-text">MapReduce的弊端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据流引擎"><span class="nav-number">1.1.2.6.</span> <span class="nav-text">数据流引擎</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
